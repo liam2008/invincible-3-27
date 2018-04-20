@@ -1,0 +1,93 @@
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">SI</h1>
+
+        </div>
+        <h3>Welcome to Smartdo Invincible</h3>
+        <p>
+        </p>
+        <p></p>
+        <p class="text-left text-warning" ng-show="loginFailure">用户名或密码错误！</p>
+        <!--<p class="text-left text-warning" ng-show="alreadyBind">该用户已被绑定！</p>-->
+        <form class="m-t" role="form" ng-submit="submit()">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="账号" required="" ng-model="username" ng-focus="onFocus()">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="密码" ng-model="password" ng-focus="onFocus()">
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">登录</button>
+        </form>
+
+        <p class="m-t"> <small>Smartdo &copy; Copyright 2017</small> </p>
+    </div>
+</div>
+
+<!--修改密码-->
+<div class="modal inmodal fade" id="editPassword" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form name="formPassword" class="form-horizontal" role="form" novalidate>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">用户名</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="account" ng-value="username" disabled/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">原密码</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="password" ng-model="passwordData.password"
+                                   ng-model-options="{ updateOn: 'blur' }" required>
+                            <div class="m-t-xs" ng-show="formPassword.password.$invalid && formPassword.submitted">
+                                <small class="text-danger" ng-show="formPassword.password.$error.required">
+                                    数据不能为空
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">新密码</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="newPassword" ng-model="passwordData.newPassword">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">确认密码</label>
+
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="confirmPassword"
+                                   ng-model="passwordData.confirmPassword" ng-model-options="{ updateOn: 'blur' }">
+                            <div class="m-t-xs"
+                                 ng-show="passwordData.confirmPassword!=passwordData.newPassword && passwordData.submitted">
+                                <small class="text-danger" ng-show="passwordData.confirmPassword!=passwordData.newPassword">
+                                    确认密码和新密码不同
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="resetPassword()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

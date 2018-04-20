@@ -1,0 +1,452 @@
+<style>
+	.daterangepicker .ranges {
+		width: 180px;
+	}
+	
+	.daterangepicker .ranges .input-mini {
+		width: 80px;
+	}
+	
+	table.table tr td {
+		vertical-align: middle;
+	}
+	
+	#sectionB .table label {
+		width: 42px;
+		margin-right: 4px;
+		text-align: right;
+		font-weight: normal;
+	}
+	
+	#sectionB .form-control.num {
+		width: 102px;
+	}
+	
+	#sectionB .form-control.tips {
+		width: 40px;
+	}
+	
+	#sectionB .form-control.text {
+		width: 240px;
+	}
+	
+	.upload {
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.upload input {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		opacity: 0;
+		cursor: pointer;
+	}
+	
+	.unappearance {
+		background-color: transparent;
+		border: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	}
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<h5>{{ activeShow||'样品购买' }}</h5>
+				</div>
+				<!-- 首页列表 -->
+				<section class="ibox-content" id="sectionA" ng-if="!activeShow">
+					<nav class="form-inline">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="where.applicant">
+						</div>
+						<div class="form-group m-r">
+							<label>样品名称</label>
+							<input class="form-control" ng-model="where.name">
+						</div>
+						<div class="form-group m-r">
+							<label>申请时间</label>
+							<input class="form-control date-picker" id="daterange" ng-model="daterange" date-range-picker options="{separator:' 至 ',locale:{format:'YYYY-MM-DD',fromLabel:'开始',toLabel:'结束',applyLabel:'应用',cancelLabel:'取消'}}">
+						</div>
+						<div class="form-group m-r">
+							<label>样品状态</label>
+							<select class="form-control" ng-model="where.status">
+								<option value>请选择</option>
+								<option value="100">待处理</option>
+								<option value="200">待采购</option>
+								<option value="300">待收货</option>
+								<option value="400">部分收货</option>
+								<option value="410">全部收货</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-info" ng-click="handlePagination(1)">查 询</button>
+						</div><br>
+						<div class="btn-group m-t m-b">
+							<button class="btn btn-white" ng-click="handleActive('新建样品单', item)">新建样品单</button>
+							<button class="btn btn-white" ng-click="checkedBtn('remove')">删 除</button>
+							<button class="btn btn-white" ng-click="checkedBtn('success')">标记为已完成</button>
+						</div>
+					</nav>
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th width="38" class="text-center"><input type="checkbox" ng-model="checkAll" id="checkAll" ng-click="checked({checkAll:checkAll})"></th>
+								<th width="120">编号</th>
+								<th width="70">状态</th>
+								<th width="77" class="text-center">样品图片</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th>样品参数</th>
+								<th width="74">采购数量</th>
+								<th width="74">签收数量</th>
+								<th width="125">费用</th>
+								<th width="84">总金额</th>
+								<th width="138">申请人</th>
+								<th width="133" class="text-center">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in sampleList">
+								<td class="text-center"><input type="checkbox" ng-checked="checkAll" ng-model="check" ng-click="checked({check:check,item:item})"></td>
+								<td>
+									<span ng-if="item.status<400">{{ item.id }}</span>
+									<a ng-if="item.status>=400" href="javascript:;" ng-click="handleActive('详情', item)">{{ item.id }}</a>
+								</td>
+								<td>
+									<select class="unappearance" ng-init="item.status=''+item.status" ng-model="item.status" disabled>
+										<option value>请选择</option>
+										<option value="100">待处理</option>
+										<option value="200">待采购</option>
+										<option value="300">待收货</option>
+										<option value="400">部分收货</option>
+										<option value="410">全部收货</option>
+									</select>
+								</td>
+								<td><img width="60" height="60" src="{{ item.img }}"></td>
+								<td>
+									<a ng-href="{{ item.link||'javascript:;' }}">{{ item.name }}</a>
+								</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td>{{ item.number }}</td>
+								<td>{{ item.signNumber }}</td>
+								<td>
+									<div>单价：{{ item.price }}</div>
+									<div>金额：{{ (item.number*item.price).toFixed(2) }}</div>
+									<div>运费：{{ item.freight.toFixed(2) }}</div>
+								</td>
+								<td>{{ (item.number*item.price+item.freight).toFixed(2) }}</td>
+								<td>
+									<div>{{ item.applicant }}</div>
+									<div>{{ item.createdAt }}</div>
+								</td>
+								<td>
+									<button class="btn btn-info btn-xs" ng-click="handleActive('编辑样品单', item)">编辑</button>
+									<button class="btn btn-primary btn-xs" ng-click="handleActive('关联订单号', item)">关联</button>
+									<button class="btn btn-success btn-xs" ng-click="handleActive('签收', item)">签收</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<lin-pagination></lin-pagination>
+				</section>
+				<!-- /首页列表 -->
+				<!-- 新增编辑 -->
+				<section class="ibox-content" id="sectionB" ng-if="activeShow=='新建样品单'||activeShow=='编辑样品单'">
+					<nav class="form-inline m-b">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="activeItem.applicant">
+						</div>
+						<div class="form-group m-r">
+							<label>采购类型</label>
+							<select class="form-control" ng-model="activeItem.purchaseType">
+								<option>样品采购</option>
+							</select>
+						</div>
+						<div class="form-group m-r">
+							<label>采购方式</label>
+							<select class="form-control" ng-model="activeItem.purchaseMethod">
+								<option>国内采购</option>
+								<option>亚马逊采购</option>
+							</select>
+						</div>
+					</nav>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th class="text-center" width="77">样品图片</th>
+								<th class="text-center">样品名称<small class="text-danger">*</small></th>
+								<th class="text-center">供应商<small class="text-danger">*</small></th>
+								<th class="text-center">样品参数</th>
+								<th class="text-center">采购数量<small class="text-danger">*</small></th>
+								<th class="text-center">单位</th>
+								<th class="text-center">费用</th>
+								<th class="text-center">总金额</th>
+								<th class="text-center" width="53"><button class="btn btn-primary btn-xs" ng-click="handleAddDetail()">添加</button></th>
+							</tr>
+						</thead>
+						<tbody class="form-inline text-center">
+							<tr ng-repeat="item in activeItem.details">
+								<td class="upload">
+									<img src="{{ item.img }}" style="max-width:60px;max-height:60px;" alt="上传图片">
+									<input type="file" accept="image/*" onchange="angular.element(this).scope().uploadChanged(this)">
+								</td>
+								<td>
+									<label>名称</label><input class="form-control input-sm text" ng-model="item.name" valid="[required]" style="{{item.name==''?'border-color:#f8ac59':''}}"><br>
+									<label>链接</label><input class="form-control input-sm text" ng-model="item.link">
+								</td>
+								<td><input class="form-control input-sm text" ng-model="item.supplier" valid="[required]" style="{{item.supplier==''?'border-color:#f8ac59':''}}"></td>
+								<td>
+									<label>型号</label><input class="form-control input-sm num" ng-model="item.model"><br>
+									<label>规格</label><input class="form-control input-sm num" ng-model="item.spec"><br>
+									<label>颜色</label><input class="form-control input-sm num" ng-model="item.color">
+								</td>
+								<td><input class="form-control input-sm num" ng-model="item.number" ng-change="handleCountDetail()" valid="[required,number]" style="{{item.number==''?'border-color:#f8ac59':''}}"></td>
+								<td><input class="form-control input-sm tips" ng-model="item.unit"></td>
+								<td>
+									<label>单价</label><input class="form-control input-sm num" ng-model="item.price" ng-change="handleCountDetail()"><br>
+									<label>金额</label><input class="form-control input-sm num" ng-value="item.amount.toFixed(2)" readonly><br>
+									<label>运费</label><input class="form-control input-sm num" ng-model="item.freight" ng-change="handleCountDetail()">
+								</td>
+								<td><input class="form-control input-sm num" ng-value="item.totalAmount.toFixed(2)" readonly></td>
+								<td><button class="btn btn-danger btn-xs" ng-click="handleRemoveDetail(item)">删除</button></td>
+							</tr>
+						</tbody>
+					</table>
+					<aside class="m-b text-right">
+						<span class="m-r">金额合计：<span class="text-danger">{{ activeItem.amountCount.toFixed(2) }}</span></span>
+						<span class="m-r">运费合计：<span class="text-danger">{{ activeItem.freightCount.toFixed(2) }}</span></span>
+						<span class="m-r">总费用合计：<span class="text-danger">{{ activeItem.totalAmountCount.toFixed(2) }}</span></span>
+						<button class="btn btn-w-m btn-info btn-sm m-r" ng-click="handleSave()" ng-disabled="!activeItem.details.length">保存草稿</button>
+						<button class="btn btn-w-m btn-primary btn-sm" ng-click="handleSave()" ng-disabled="!activeItem.details.length">确 认</button>
+						<button class="btn btn-w-m btn-white btn-sm m-l" ng-click="handleActive()">取 消</button>
+					</aside>
+				</section>
+				<!-- /新增编辑 -->
+				<!-- 关联订单号 -->
+				<section class="ibox-content" id="sectionC" ng-if="activeShow=='关联订单号'">
+					<nav class="form-inline m-b">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="activeItem.applicant" disabled>
+						</div>
+						<div class="form-group m-r">
+							<label>采购类型</label>
+							<select class="form-control" ng-model="activeItem.purchaseType" disabled>
+								<option>样品采购</option>
+							</select>
+						</div>
+						<div class="form-group m-r">
+							<label>采购方式</label>
+							<select class="form-control" ng-model="activeItem.purchaseMethod" disabled>
+								<option>国内采购</option>
+								<option>亚马逊采购</option>
+							</select>
+						</div>
+					</nav>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th width="77" class="text-center">样品图片</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th>样品参数</th>
+								<th width="200">外部单号<small class="text-danger">*</small></th>
+								<th width="74">采购数量</th>
+								<th width="45">单位</th>
+								<th width="125">费用</th>
+								<th width="84">总金额</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in activeItem.details">
+								<td><img src="{{ item.img }}" style="max-width:60px;max-height:60px;" alt="暂无图片"></td>
+								<td>
+									<a ng-href="{{ item.link||'javascript:;' }}">{{ item.name }}</a>
+								</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td><input class="form-control input-sm" ng-model="item.oddNumber" valid="[required]"></td>
+								<td>{{ item.number }}</td>
+								<td class="text-center">{{ item.unit }}</td>
+								<td>
+									<div>单价：{{ item.price}}</div>
+									<div>金额：{{ item.amount.toFixed(2) }}</div>
+									<div>运费：{{ item.freight }}</div>
+								</td>
+								<td>{{ item.totalAmount.toFixed(2) }}</td>
+							</tr>
+						</tbody>
+					</table>
+					<aside class="m-b text-right">
+						<span class="m-r">金额合计：<span class="text-danger">{{ activeItem.amountCount.toFixed(2) }}</span></span>
+						<span class="m-r">运费合计：<span class="text-danger">{{ activeItem.freightCount.toFixed(2) }}</span></span>
+						<span class="m-r">总费用合计：<span class="text-danger">{{ activeItem.totalAmountCount.toFixed(2) }}</span></span>
+						<button class="btn btn-w-m btn-primary btn-sm" ng-click="handleSave()">确 认</button>
+						<button class="btn btn-w-m btn-white btn-sm m-l" ng-click="handleActive()">取 消</button>
+					</aside>
+				</section>
+				<!-- /关联订单号 -->
+				<!-- 签收 -->
+				<section class="ibox-content" id="sectionD" ng-if="activeShow=='签收'">
+					<nav class="form-inline m-b">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="activeItem.applicant" disabled>
+						</div>
+						<div class="form-group m-r">
+							<label>采购类型</label>
+							<select class="form-control" ng-model="activeItem.purchaseType" disabled>
+								<option>样品采购</option>
+							</select>
+						</div>
+						<div class="form-group m-r">
+							<label>采购方式</label>
+							<select class="form-control" ng-model="activeItem.purchaseMethod" disabled>
+								<option>国内采购</option>
+								<option>亚马逊采购</option>
+							</select>
+						</div>
+					</nav>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th width="77" class="text-center">样品图片</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th>样品参数</th>
+								<th width="74">采购数量</th>
+								<th width="45">单位</th>
+								<th width="125">费用</th>
+								<th width="84">总金额</th>
+								<th width="102">签收数量<small class="text-danger">*</small></th>
+								<th width="78" class="text-center">实物图片<small class="text-danger">*</small></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in activeItem.details">
+								<td><img src="{{ item.img }}" style="max-width:60px;max-height:60px;" alt="暂无图片"></td>
+								<td>
+									<a ng-href="{{ item.link||'javascript:;' }}">{{ item.name }}</a>
+								</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td>{{ item.number }}</td>
+								<td class="text-center">{{ item.unit }}</td>
+								<td>
+									<div>单价：{{ item.price }}</div>
+									<div>金额：{{ item.amount.toFixed(2) }}</div>
+									<div>运费：{{ item.freight }}</div>
+								</td>
+								<td>{{ item.totalAmount.toFixed(2) }}</td>
+								<td><input class="form-control input-sm" ng-model="item.signNumber" valid="[required,number]"></td>
+								<td class="upload">
+									<img src="{{ item.entityImg }}" style="max-width:60px;max-height:60px;" alt="上传图片">
+									<input type="file" accept="image/*" onchange="angular.element(this).scope().uploadChanged(this)" valid="[required]">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<aside class="m-b text-right">
+						<span class="m-r">金额合计：<span class="text-danger">{{ activeItem.amountCount.toFixed(2) }}</span></span>
+						<span class="m-r">运费合计：<span class="text-danger">{{ activeItem.freightCount.toFixed(2) }}</span></span>
+						<span class="m-r">总费用合计：<span class="text-danger">{{ activeItem.totalAmountCount.toFixed(2) }}</span></span>
+						<button class="btn btn-w-m btn-primary btn-sm" ng-click="handleSave()">确 认</button>
+						<button class="btn btn-w-m btn-white btn-sm m-l" ng-click="handleActive()">取 消</button>
+					</aside>
+				</section>
+				<!-- /签收 -->
+				<!-- 详情 -->
+				<section class="ibox-content" id="sectionD" ng-if="activeShow=='详情'">
+					<nav class="form-inline m-b">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="activeItem.applicant" disabled>
+						</div>
+						<div class="form-group m-r">
+							<label>采购类型</label>
+							<select class="form-control" ng-model="activeItem.purchaseType" disabled>
+								<option>样品采购</option>
+							</select>
+						</div>
+						<div class="form-group m-r">
+							<label>采购方式</label>
+							<select class="form-control" ng-model="activeItem.purchaseMethod" disabled>
+								<option>国内采购</option>
+								<option>亚马逊采购</option>
+							</select>
+						</div>
+					</nav>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th width="77" class="text-center">样品图片</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th>样品参数</th>
+								<th width="120">外部单号</th>
+								<th width="74">采购数量</th>
+								<th width="45">单位</th>
+								<th width="125">费用</th>
+								<th width="84">总金额</th>
+								<th width="84">签收数量</th>
+								<th width="77" class="text-center">实物图片</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in activeItem.details">
+								<td><img src="{{ item.img }}" style="max-width:60px;max-height:60px;" alt="暂无图片"></td>
+								<td>
+									<a ng-href="{{ item.link||'javascript:;' }}">{{ item.name }}</a>
+								</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td>{{ item.oddNumber }}</td>
+								<td>{{ item.number }}</td>
+								<td class="text-center">{{ item.unit }}</td>
+								<td>
+									<div>单价：{{ item.price }}</div>
+									<div>金额：{{ item.amount.toFixed(2) }}</div>
+									<div>运费：{{ item.freight }}</div>
+								</td>
+								<td>{{ item.totalAmount.toFixed(2) }}</td>
+								<td>{{ item.signNumber }}</td>
+								<td><img src="{{ item.entityImg }}" style="max-width:60px;max-height:60px;" alt="暂无图片"></td>
+							</tr>
+						</tbody>
+					</table>
+					<aside class="m-b text-right">
+						<span class="m-r">金额合计：<span class="text-danger">{{ activeItem.amountCount.toFixed(2) }}</span></span>
+						<span class="m-r">运费合计：<span class="text-danger">{{ activeItem.freightCount.toFixed(2) }}</span></span>
+						<span class="m-r">总费用合计：<span class="text-danger">{{ activeItem.totalAmountCount.toFixed(2) }}</span></span>
+						<button class="btn btn-w-m btn-white btn-sm m-l" ng-click="handleActive()">返 回</button>
+					</aside>
+				</section>
+				<!-- /详情 -->
+			</div>
+		</div>
+	</div>
+</div>

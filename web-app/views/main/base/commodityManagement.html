@@ -1,0 +1,792 @@
+<style>
+	/*列表垂直居中*/
+	
+	table.table tr td {
+		vertical-align: middle;
+		text-align: left;
+	}
+	
+	table.table tr th {
+		width: 318px;
+	}
+	
+	.nav-tabs>li.active>a,
+	.nav-tabs>li.active>a:hover,
+	.nav-tabs>li.active>a:focus {
+		border-bottom-color: #fff;
+	}
+	
+	.table {
+		white-space: nowrap;
+	}
+	
+	.btn+.btn {
+		margin-left: 15px;
+	}
+	
+	.form-inline .form-group {
+		margin-right: 10px;
+		margin-bottom: 10px;
+	}
+	
+	.form-inline .form-control {
+		width: 200px;
+	}
+	
+	.daterangepicker .ranges {
+		width: 180px;
+	}
+	
+	.daterangepicker .ranges .input-mini {
+		width: 80px;
+	}
+	
+	.appearance {
+		background-color: transparent;
+		border-color: transparent;
+		outline: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	}
+	
+	.mydropdown {
+		position: relative;
+		width: 420px;
+		cursor: pointer;
+	}
+	
+	.mydropdown-nav {
+		width: 400px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	
+	.mydropdown-content {
+		display: none;
+		position: absolute;
+		right: 100%;
+		bottom: 0;
+		width: 420px;
+		min-height: 70px;
+		max-height: 210px;
+		margin-bottom: 0;
+		padding: 10px 10px 10px 24px;
+		white-space: normal;
+		overflow-y: auto;
+		background-color: #fff;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+		border-radius: 4px;
+	}
+	
+	.mydropdown-content li {
+		margin-top: 10px;
+		padding-top: 10px;
+		border-top: 1px solid #eaeefb;
+		white-space: pre-wrap;
+	}
+	
+	.mydropdown-content li:first-child {
+		margin-top: 0;
+		padding-top: 0;
+		border-top: none;
+	}
+	
+	.mydropdown:hover .mydropdown-content {
+		display: block
+	}
+	
+	#daterange {
+		background-color: #fff;
+		cursor: pointer;
+	}
+	
+	#sectionA td {
+		vertical-align: middle;
+	}
+	
+	#sectionA label {
+		width: 84px;
+		margin-right: 10px;
+		text-align: right;
+	}
+	
+	#sectionB .ellipsis {
+		width: 300px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	
+	#sectionB .normal {
+		width: 300px;
+		white-space: normal;
+	}
+	
+	#sectionB td label,
+	#sectionC td label {
+		width: 155px;
+		text-align: right;
+	}
+	
+	#sectionB td .text {
+		width: 100%;
+		text-align: center;
+		background-color: #fff;
+		cursor: pointer;
+	}
+	
+	#sectionB td .num,
+	#sectionC td .form-control {
+		width: 120px;
+	}
+	
+	#sectionB td textarea.form-control,
+	#sectionC td textarea.form-control {
+		width: 100%;
+		resize: none;
+	}
+	
+	#sectionC label {
+		margin-bottom: 0;
+		vertical-align: middle;
+	}
+	
+	#sectionC .form-control[readonly] {
+		padding: 6px 0;
+		background-color: transparent;
+		border-color: transparent;
+	}
+	
+	.chosen-select {
+		width: 200px;
+	}
+	
+	.btn[disabled] {
+		color: #bcbec2;
+		background-color: #f4f4f5 !important;
+		border-color: #e9e9eb !important;
+	}
+	
+	.lin-dropdown {
+		position: relative;
+		cursor: pointer;
+	}
+	
+	.lin-dropdown:hover .lin-dropdown-content {
+		display: block;
+	}
+	
+	.lin-dropdown .lin-dropdown-content {
+		display: none;
+		position: absolute;
+		left: 100%;
+		/*bottom: 0;*/
+		width: 600px;
+		background-color: #BCBEC2;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+		border-radius: 4px;
+		cursor: default;
+		z-index: 10;
+	}
+	
+	.div-top {
+		top: 0;
+	}
+	
+	.div-bottom {
+		bottom: 0;
+	}
+	/*组合样式*/
+	
+	.group-Heng {
+		width: 20px;
+		height: 20px;
+		border-radius: 10px;
+		border: 2px #337ab7 solid;
+	}
+	
+	.imitateCross-Heng {
+		height: 18px;
+		width: 18px;
+		position: relative;
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+	
+	.imitateCross-Heng:after {
+		content: "";
+		display: block;
+		position: absolute;
+		width: 100%;
+		height: 2px;
+		background: #337ab7;
+		top: 7px;
+		right: 0px;
+	}
+	
+	.imitateCross-Heng:before {
+		content: "";
+		display: block;
+		position: absolute;
+		width: 2px;
+		height: 100%;
+		background: #337ab7;
+		top: 0px;
+		left: 7px;
+	}
+	
+	.padding-left-25 {
+		padding-left: 25px;
+	}
+	.padding-left-4 {
+		padding-left: 4px;
+	}
+</style>
+<!--表格-->
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<!--产品管理列表-->
+			<section class="ibox" id="sectionA" ng-if="!activeShow||activeShow=='产品管理'">
+				<div class="ibox-title">
+					<h5>产品管理</h5>
+					<div ibox-tools></div>
+				</div>
+				<div class="ibox-content">
+					<nav class="row form-inline m-b">
+						<div class="col-lg-12">
+							<div class="form-group m-r">
+								<label>产品中文名</label>
+								<input class="form-control" ng-model="where.name_cn">
+							</div>
+							<div class="form-group m-r">
+								<label>产品英文名</label>
+								<input class="form-control" ng-model="where.name">
+							</div>
+							<div class="form-group m-r">
+								<label>品类</label>
+								<select class="chosen-select" style="width: 196px;" name="productClassify" id="productClassify" chosen ng-model="where.roductClassify" valid="[required]" ng-options="item['_id'] as item.name for item in categories">
+									<option value>请选择品类</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<button class="btn btn-info" ng-click="searchItem()">搜索</button>
+								<button class="btn btn-success" ng-click="handleActive({activeShow:'新增产品'})">新增产品</button>
+							</div>
+						</div>
+					</nav>
+
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover table-condensed text-center">
+							<thead>
+								<tr>
+									<th>序号</th>
+									<th>产品编号</th>
+									<th>产品中文名</th>
+									<th>产品英文名</th>
+									<th>品类</th>
+									<th>产品状态</th>
+									<th>创建时间</th>
+									<th>操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="value in tableOption.tableList">
+									<td>{{$index+1}}</td>
+									<td>
+										<div ng-if="value.combination.length" class="group-Heng lin-dropdown" style="display: inline-block;vertical-align: middle;">
+											<div class="imitateCross-Heng"></div>
+											<div class="lin-dropdown-content {{$index==0 || $index==1 || $index==2 || $index==3 || $index==4?'div-top':'div-bottom'}}">
+												<div style="padding:12px;max-height:288px;overflow-x:auto;">
+													<table class="table table-bordered table-hover table-condensed text-center">
+														<thead>
+															<tr>
+																<th>产品编号</th>
+																<th>产品中文名</th>
+																<th>数量</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr ng-repeat="listItem in value.combination">
+																<td>{{listItem.store_sku.store_sku}}</td>
+																<td>{{listItem.store_sku.name_cn}}</td>
+																<td>{{listItem.count}}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<a href="javascript:;" ng-click="handleActive({activeShow:'查看产品',activeItem:$index})" class="{{value.combination.length===0?'padding-left-25':'padding-left-4'}}">{{value.store_sku}}</a>
+									</td>
+									<td>
+										<div style="max-width:480px;overflow:hidden;text-overflow:ellipsis;">{{value.name_cn || '-'}}</div>
+									</td>
+									<td>
+										<div style="max-width:480px;overflow:hidden;text-overflow:ellipsis;">{{value.name || '-'}}</div>
+									</td>
+									<td>{{ value.categories || '-' }}</td>
+									<td>{{ value.deleted ? '作废' : '正常'}}</td>
+									<td>{{ value.createdAt | date:'yyyy-MM-dd HH:mm:ss' || '-' }}</td>
+									<td style="white-space:nowrap">
+										<button ng-if="value.deleted" class="btn btn-info btn-outline btn-sm" type="button" ng-click="recover(value,$index)">恢复</button>
+										<button ng-if="!value.deleted" class="btn btn-danger btn-outline btn-sm" type="button" ng-click="cancellation(value,$index)">作废</button>
+										<button ng-if="!value.deleted" class="btn btn-primary btn-outline btn-sm" type="button" ng-click="handleActive({activeShow:'编辑产品',activeItem:$index})">编辑</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<!--分页-->
+						<div class="pull-right">
+							<ul uib-pagination total-items="tableOption.totalItems" ng-model="tableOption.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="true" ng-change="tableOption.pageChangeFn()"></ul>
+						</div>
+
+					</div>
+				</div>
+			</section>
+			<!-- /产品管理列表-->
+
+			<!-- 新增产品 -->
+			<section class="ibox" id="sectionB" ng-if="activeShow=='新增产品'">
+				<div class="ibox-title">
+					<h5>新增产品</h5>
+					<div ibox-tools></div>
+				</div>
+
+				<div class="ibox-content">
+					<nav class="row form-inline">
+						<div class="row">
+							<div class="form-horizontal" name="formAdd" role="form">
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="addName_cn" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品中文名：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="addName_cn" ng-model="activeItem.addName_cn" id="addName_cn" placeholder="产品中文名" valid="[required]">
+										</div>
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="addName_brief" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品简称：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="addName_brief" id="addName_brief" ng-model="activeItem.addName_brief" placeholder="请输入名称简写" valid="[required]">
+										</div>
+										<div class="m-t-xs" ng-if="abbreviation" style="padding-left: 96px;">
+											<small class="text-danger">
+			                          			简称不能含有除了字母和数字外的字符，且长度不大于5
+			                          		</small>
+										</div>
+									</div>
+									
+									<div class="form-group col-lg-4">
+										<label for="addName_en" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品英文名：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="addName_en" id="addName_en" ng-model="activeItem.addName_en" placeholder="请输入产品英文名" valid="[required]">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="productClassify" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											品类：
+										</label>
+										<div class="col-sm-8">
+											<select class="chosen-select" name="productClassify" id="productClassify" chosen ng-model="activeItem.productClassify" valid="[required]" ng-options="item.name for item in categories">
+												<option value>请选择品类</option>
+											</select>
+											<div class="m-t-xs" ng-if="briefFlag">
+												<small class="text-danger">
+				                          			产品分类不能为空
+				                          		</small>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="productClassify" class="col-sm-4 control-label">
+											是否需要加工：
+										</label>
+										<div class="col-sm-8">
+											<div class="radio" style="display: inline;">
+												<lable class="m-r-lg">
+													<!--<input type="radio" icheck ng-value="1" name="process" ng-model="activeItem.process" />&nbsp;&nbsp;是-->
+													<button ng-click="addCheckTrue()" class="btn btn-circle  {{addCheckedTrue?'btn-info':'btn-white'}}" style="width: 24px;height: 24px;padding: 2px 0;" name="process" ng-model="process">
+														<i class="fa {{addCheckedTrue?'fa-check':''}}"></i>
+													</button> &nbsp;&nbsp;是
+												</lable>
+												<lable class="m-r-lg" style="margin-left: 60px;">
+													<!--<input type="radio" icheck ng-value="0" name="process" ng-model="activeItem.process" />&nbsp;&nbsp;否-->
+													<button ng-click="addCheckFalse()" class="btn btn-circle {{addCheckedFalse?'btn-info':'btn-white'}}" style="width: 24px;height: 24px;padding: 2px 0;" name="process" ng-model="process">
+														<i class="fa {{addCheckedFalse?'fa-check':''}}"></i>
+													</button> &nbsp;&nbsp;否
+												</lable>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 根据是否需要加工来显示，是则显示，反之，不显示 -->
+								<div class="row" ng-if="process == '1'">
+									<div class="form-group col-lg-4">
+										<label for="storeSku" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											添加库存SKU：
+										</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="storeSku" id="storeSku" ng-model="notSave.storeSku" placeholder="库存SKU" disabled="disabled">
+											<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.storeSku.$invalid">
+												<small class="text-danger" ng-show="formAdd.storeSku.$error.required">
+				                                    	库存SKU不能为空
+				                                </small>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<button class="btn btn-success" data-toggle="modal" data-target="#skuModal">选择产品</button>
+										</div>
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="storeNumber" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											数量：
+										</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="storeNumber" id="storeNumber" ng-model="notSave.storeNumber">
+											<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.storeNumber.$invalid">
+												<small class="text-danger" ng-show="formAdd.storeNumber.$error.required">
+				                                    	数量不能为空
+				                                </small>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<button class="btn btn-primary" ng-click="handleAddDetail()">添加</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</nav>
+					<table class="table table-striped table-bordered table-hover" style="width: 56%;" ng-if="process == '1'">
+						<thead>
+							<tr>
+								<th width="300">序号</th>
+								<th width="300">产品名称</th>
+								<th width="300">数量</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody class="form-inline">
+							<tr ng-repeat="item in activeItem.details">
+								<td>{{$index+1}}</td>
+								<td><span>{{item.store_sku.store_sku}}<br>{{item.store_sku.name_cn}}</span></td>
+								<td><input type="number" min="0" ng-value="item.count" ng-model="item.count"></td>
+								<td style="text-align: center;"><span class="btn btn-danger btn-xs" ng-click="handleRemoveDetail(item)">删除</span></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="row" style="margin-left: 600px;margin-top: 150px;">
+						<article class="col-lg-12 m-b">
+							<button class="btn btn-w-m btn-info" ng-click="saveItemAdd({})">保 存</button>
+							<button class="btn btn-w-m btn-white" ng-click="handleActive({})">取 消</button>
+						</article>
+					</div>
+				</div>
+			</section>
+			<!-- /新增产品 -->
+
+			<!-- 编辑 -->
+			<section class="ibox" id="sectionB" ng-if="activeShow=='编辑产品'">
+				<div class="ibox-title">
+					<h5>编辑产品</h5>
+					<div ibox-tools></div>
+				</div>
+
+				<div class="ibox-content">
+					<nav class="row form-inline">
+						<div class="row">
+							<div class="form-horizontal" name="formEdit" role="form" novalidate>
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="editStore_sku" class="col-sm-4 control-label">
+											库存SKU：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editStore_sku" id="editStore_sku" ng-model="activeItem.editStore_sku" disabled="disabled">
+										</div>
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="editClassify" class="col-sm-4 control-label">
+											品类：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editClassify" id="editClassify" ng-model="activeItem.editClassify" disabled="disabled">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="editName_cn" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品中文名：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editName_cn" id="editName_cn" ng-model="activeItem.editName_cn" valid="[required]">
+										</div>
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="editName_en" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品英文名：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editName_en" id="editName_en" ng-model="activeItem.editName_en" valid="[required]">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="productClassify" class="col-sm-4 control-label">
+											是否需要加工：
+										</label>
+										<div class="col-sm-8">
+											<div class="radio" style="display: inline;">
+												<lable class="m-r-lg">
+													<!--<input type="radio" icheck ng-value="1" name="process" ng-model="process" />&nbsp;&nbsp;是-->
+													<button ng-click="checkTrue()" class="btn btn-circle  {{checkedTrue?'btn-info':'btn-white'}}" style="width: 24px;height: 24px;padding: 2px 0;" name="process" ng-model="process">
+														<i class="fa {{checkedTrue?'fa-check':''}}"></i>
+													</button> &nbsp;&nbsp;是
+												</lable>
+												<lable class="m-r-lg" style="margin-left: 60px;">
+													<!--<input type="radio" icheck ng-value="0" name="process" ng-model="process" />&nbsp;&nbsp;否-->
+													<button ng-click="checkFalse()" class="btn btn-circle {{checkedFalse?'btn-info':'btn-white'}}" style="width: 24px;height: 24px;padding: 2px 0;" name="process" ng-model="process">
+														<i class="fa {{checkedFalse?'fa-check':''}}"></i>
+													</button> &nbsp;&nbsp;否
+												</lable>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row" ng-if="process == '1'">
+									<div class="form-group col-lg-4">
+										<label for="nameEN" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											添加库存SKU：
+										</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="storeSku" id="storeSku" ng-model="notSave.storeSku" placeholder="库存SKU" disabled="disabled">
+											<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.storeSku.$invalid">
+												<small class="text-danger" ng-show="formAdd.storeSku.$error.required">
+				                                    	库存SKU不能为空
+				                                </small>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<button class="btn btn-success" data-toggle="modal" data-target="#skuModal">选择产品</button>
+										</div>
+
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="storeNumber" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											数量：
+										</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control" name="storeNumber" id="storeNumber" ng-model="notSave.storeNumber">
+											<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.storeNumber.$invalid">
+												<small class="text-danger" ng-show="formAdd.storeNumber.$error.required">
+				                                    	数量不能为空
+				                                </small>
+											</div>
+										</div>
+										<div class="col-sm-2">
+											<button class="btn btn-primary" ng-click="handleAddDetail()">添加</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</nav>
+					<table class="table table-striped table-bordered table-hover" style="width: 56%;" ng-if="process == '1'">
+						<thead>
+							<tr>
+								<th width="300">序号</th>
+								<th width="300">产品名称</th>
+								<th width="300">数量</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody class="form-inline">
+							<tr ng-repeat="item in activeItem.details">
+								<td>{{$index+1}}</td>
+								<td><span>{{item.store_sku.store_sku}}<br>{{item.store_sku.name_cn}}</span></td>
+								<td><input type="number" min="0" ng-value="item.count" ng-model="item.count"></td>
+								<td style="text-align: center;"><span class="btn btn-danger btn-xs" ng-click="handleRemoveDetail(item)">删除</span></td>
+							</tr>
+						</tbody>
+					</table>
+					<article class="m-t">
+						<button class="btn btn-w-m btn-info" ng-click="saveItemEdit({})">保 存</button>
+						<button class="btn btn-w-m btn-white" ng-click="handleActive({})">取 消</button>
+					</article>
+					<div class="hr-line-dashed"></div>
+					<uib-tabset active="ativeTab">
+						<uib-tab index="1" heading="修改记录">
+							<div ng-if="activeItem.histories.length">
+								<div style="max-height: 640px;margin-top: 20px;overflow: auto;border: 1px #9EA6B9 solid;">
+									<div style="padding: 10px;" ng-repeat="item in activeItem.histories">
+										<div style="padding-top: 4px;">{{item.head}}</div>
+										<div style="padding-top: 4px;" ng-bind-html="item.body"></div>
+									</div>
+								</div>
+							</div>
+						</uib-tab>
+					</uib-tabset>
+				</div>
+			</section>
+			<!-- 编辑 -->
+
+			<!-- 查看产品详情 -->
+			<section class="ibox" id="sectionB" ng-if="activeShow=='查看产品'">
+				<div class="ibox-title">
+					<h5>{{activeShow}}</h5>
+					<div ibox-tools></div>
+				</div>
+
+				<div class="ibox-content">
+					<nav class="row form-inline">
+						<div class="row">
+							<div class="form-horizontal" name="formAdd" role="form" novalidate>
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="editStore_sku" class="col-sm-4 control-label">
+											库存SKU：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editStore_sku" id="editStore_sku" ng-model="activeItem.editStore_sku" disabled="disabled">
+										</div>
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="editClassify" class="col-sm-4 control-label">
+											产品分类：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editClassify" id="editClassify" ng-model="activeItem.editClassify" disabled="disabled">
+										</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-lg-4">
+										<label for="editName_cn" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品中文名：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editName_cn" id="editName_cn" ng-model="activeItem.editName_cn" disabled="disabled">
+										</div>
+									</div>
+									<div class="form-group col-lg-4">
+										<label for="editName_en" class="col-sm-4 control-label">
+											<span class="text-danger">*</span>
+											产品英文名：
+										</label>
+										<div class="col-sm-8">
+											<input type="text" class="form-control" name="editName_en" id="editName_en" disabled="disabled" ng-model="activeItem.editName_en">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</nav>
+					<table class="table table-striped table-bordered table-hover" style="width: 56%;margin-top: 45px;" ng-if="process == '1'">
+						<thead>
+							<tr>
+								<th width="300">序号</th>
+								<th width="300">产品名称</th>
+								<th width="300">数量</th>
+							</tr>
+						</thead>
+						<tbody class="form-inline">
+							<tr ng-repeat="item in activeItem.details">
+								<td>{{$index+1}}</td>
+								<td><span>{{item.store_sku.store_sku}}<br>{{item.store_sku.name_cn}}</span></td>
+								<td><input type="text" min="0" ng-value="item.count" disabled="disabled"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="hr-line-dashed"></div>
+	
+					<uib-tabset active="ativeTab">
+						<uib-tab index="1" heading="修改记录">
+							<div ng-if="activeItem.histories.length">
+								<div style="max-height: 640px;margin-top: 20px;overflow: auto;border: 1px #9EA6B9 solid;">
+									<div style="padding: 10px;" ng-repeat="item in activeItem.histories">
+										<div style="padding-top: 4px;">{{item.head}}</div>
+										<div style="padding-top: 4px;" ng-bind-html="item.body"></div>
+									</div>
+								</div>
+							</div>
+						</uib-tab>
+					</uib-tabset>
+
+					<div class="row" style="margin-top: 10px;">
+						<article class="col-lg-12 m-b">
+							<button class="btn btn-w-m btn-white" ng-click="handleActive({})">返 回</button>
+						</article>
+					</div>
+				</div>
+			</section>
+			<!-- /查看产品详情 -->
+
+		</div>
+	</div>
+</div>
+
+<!-- 选择库存SKU -->
+<aside class="modal fade" id="skuModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">库存SKU选择</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-striped table-bordered table-hover" datatable="ng" dt-options="dtOptionsNew">
+					<thead>
+						<tr>
+							<th width="120">库存SKU</th>
+							<th>产品中文名</th>
+							<th>产品英文名</th>
+							<th width="32">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in productSkuList">
+							<td>{{ item.storeSku }}</td>
+							<td style="max-width:360px;overflow:hidden;text-overflow:ellipsis;">{{ item.nameCN }}</td>
+							<td style="max-width:360px;overflow:hidden;text-overflow:ellipsis;">{{ item.nameEn }}</td>
+							<td><button class="btn btn-primary btn-xs" ng-click="submitSku(item)">选择</button></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</aside>
+
+<div load-icon is-load="isLoad"></div>

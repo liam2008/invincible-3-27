@@ -1,0 +1,310 @@
+<style>
+
+</style>
+<!--表格-->
+<div class="wrapper wrapper-content animated fadeInRight" xmlns="http://www.w3.org/1999/html">
+	<div class="row">
+		<div class="col-lg-12">
+			<!--库存统计汇总表-->
+			<section class="ibox" id="sectionA" ng-if="activeShow !== 'inventorySummary' ? false : true ">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>
+	                       	 库存汇总
+	                    </h5>
+
+						<div ibox-tools></div>
+					</div>
+					<div class="ibox-content">
+						<!--条件查询-->
+						<div>
+							<form role="form" class="form-inline" name="formOption" role="form" novalidate>
+								<div class="row">
+									<div class="col-lg-2">
+										<div class="form-group">
+											<!--<label class="form-label">库存SKU编号：</label>-->
+											<input type="text" name="store_sku" ng-model="queryData.store_sku" class="form-control" placeholder="库存SKU编号">
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<div class="form-group">
+											<!--<label class="form-label">店铺：</label>-->
+											<input type="text" name="shop_name" ng-model="queryData.shop_name" class="form-control" placeholder="店铺">
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<div class="form-group">
+											<input type="text" name="chineseName" ng-model="queryData.chineseName" class="form-control" placeholder="中文名">
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<div class="form-group">
+											<input type="text" name="msku" ng-model="queryData.msku" class="form-control" placeholder="MSKU">
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<button type="button" class="btn btn-primary btn-w-m" ng-click="search('list')">查 询</button>
+										<button type="button" class="btn btn-default btn-w-m m-l" ng-click="resetFn('list')">重 置</button>
+										<button type="button" class="btn btn-default btn-w-m m-l" ng-click="exportExcel()">导出Excel</button>
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<div class="table-responsive" style="margin-top: 30px;">
+							<table class="table table-bordered table-hover table-condensed text-center" border="2" cellpadding="2" cellspacing="0">
+								<thead>
+									<!--表头第一行-->
+									<tr>
+										<td rowspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;" width="50">序号</td>
+										<td rowspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">库存SKU编号</td>
+										<td rowspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;" width="200">中文名称</td>
+										<td colspan="4" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">本地仓库</td>
+										<td colspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">海外仓</td>
+										<td colspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">FBA库存</td>
+										<td rowspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">MSKU</td>
+										<td rowspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">店铺</td>
+										<td rowspan="3" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('total_qty')">
+												合计
+											</a>
+										</td>
+									</tr>
+									<!--表头第二行-->
+									<tr>
+										<td colspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">在途</td>
+										<td colspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">在仓</td>
+										<td colspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">在途</td>
+										<td rowspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('overseas_stock_qty')">
+												在仓
+											</a>
+										</td>
+										<td rowspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">在途</td>
+										<td rowspan="2" style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">在仓</td>
+									</tr>
+									<!--表头第三行-->
+									<tr>
+										<td style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('product_qty')">
+												生产中
+											</a>
+										</td>
+										<td style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('transport_qty')">
+												运输中
+											</a>
+										</td>
+										<td style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('panyu_stock_qty')">
+												番禺仓
+											</a>
+										</td>
+										<td style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('virtual_stock_qty')">
+												工厂/货代虚拟仓
+											</a>
+										</td>
+										<td style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">
+											<a ng-click="sortFn('overseas_transport_qty')">
+												国内发往海外仓
+											</a>
+										</td>
+										<td style="vertical-align: middle;font-weight: bolder;border: 2px solid #C8C8C8;">FBA退仓</td>
+									</tr>
+								</thead>
+								<tbody ng-repeat="item in tableList">
+									<tr>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ $index+1 }}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.store_sku}}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.cn_name}}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">
+											<a href="javascript:;">
+												<span data-toggle="modal" data-target="#purchaseDetail" ng-click="productionDetailRecord(item.store_sku, item)">{{item.product_qty}}</span>
+											</a>
+										</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.transport_qty}}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.panyu_stock_qty}}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.virtual_stock_qty}}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.overseas_transport_qty}}</td>
+										<td style="vertical-align: middle;border: 2px solid #C8C8C8;">
+											{{item.fba_return_qty[0]}}
+										</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">
+											<a><span data-toggle="modal" data-target="#skuModal" ng-click="lookOverseaLocationRecord(item.store_sku, item)">{{item.overseas_stock_qty}}</span></a>
+										</td>
+										<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.fba_transport_qty[0]}}</td>
+										<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.fba_stock_qty[0]}}</td>
+										<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.msku[0]}}</td>
+										<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.shop_name[0]}}</td>
+										<td rowspan="{{item.msku.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{item.total_qty}}</td>
+									</tr>
+									<tr ng-repeat="Msku in item.msku track by $index" ng-show="Msku !== item.msku[0]">
+										<td style="border: 2px solid #C8C8C8;">{{ item.fba_return_qty[$index] }}</td>
+										<td style="border: 2px solid #C8C8C8;">{{ item.fba_transport_qty[$index] }}</td>
+										<td style="border: 2px solid #C8C8C8;">{{ item.fba_stock_qty[$index] }}</td>
+										<td style="border: 2px solid #C8C8C8;">{{ Msku }}</td>
+										<td style="border: 2px solid #C8C8C8;">{{ item.shop_name[$index] }}</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<!--分页-->
+							<div class="pull-right">
+								<ul uib-pagination total-items="totalItems" ng-model="queryData.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></ul>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</section>
+			<!--/库存统计汇总表-->
+		</div>
+	</div>
+</div>
+
+<!----------------------下面是选择弹出----------------------->
+<!--采购清单明细表-->
+<div class="modal inmodal fade" id="purchaseDetail" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+				<h4 class="modal-title">采购订单生产明细表</h4>
+			</div>
+			<div class="modal-body">
+				<!--<div class="table-responsive">-->
+				<div>
+					<form role="form" class="form-inline" name="formOption" role="form" novalidate>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="form-label">中文名称：{{ productName }}</label>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="form-label">库存SKU：{{ productSku }}</label>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div style="height: 600px; overflow-y: auto;">
+					<table class="table table-bordered table-hover table-condensed text-center">
+						<thead>
+							<tr>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">序号</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">订单号</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">采购数量</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">计划交货时间</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">计划交货数量</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">实际交货数量</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">未交数量</th>
+							</tr>
+						</thead>
+						<tbody ng-repeat="item in tableDatil">
+							<tr>
+								<td rowspan="{{item.plan_deliver_quantity.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ $index+1 }}</td>
+								<td rowspan="{{item.plan_deliver_quantity.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ item.purchase_id }}</td>
+								<td rowspan="{{item.plan_deliver_quantity.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ item.purchase_quantity }}</td>
+								<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ item.plan_deliver_date[0] }}</td>
+								<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ item.plan_deliver_quantity[0] }}</td>
+								<td rowspan="{{item.plan_deliver_quantity.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ item.actual_quantity }}</td>
+								<td rowspan="{{item.plan_deliver_quantity.length}}" style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ item.difference }}</td>
+							</tr>
+							<tr ng-repeat="planDeliverQuantity in item.plan_deliver_quantity" ng-show="planDeliverQuantity !== item.plan_deliver_quantity[0]">
+								<!--计划交货时间-->
+								<td style="border: 2px solid #C8C8C8;">{{ item.plan_deliver_date[$index] }}</td>
+								<!--计划交货数量-->
+								<td style="border: 2px solid #C8C8C8;">{{ planDeliverQuantity }}</td>
+							</tr>
+						</tbody>
+						<tbody ng-if="!tableDatil.length">
+							<td class="text-warning" colspan="7">此项没有采购订单生产明细</td>
+						</tbody>
+					</table>
+				</div>
+				<!--</div>-->
+			</div>
+		</div>
+	</div>
+</div>
+<!--/采购清单明细表-->
+
+<!--海外仓在仓记录表的弹出框-->
+<div class="modal inmodal fade" id="skuModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+				<h4 class="modal-title">海外仓在仓记录表</h4>
+			</div>
+			<div class="modal-body">
+				<!--<div class="table-responsive">-->
+				<!--<table datatable="ng" dt-options="dtOptionsNew" class="table table-striped table-bordered table-hover dataTables-example table-responsive">
+						<thead>
+							<tr>
+								<th>序号</th>
+								<th>仓库</th>
+								<th>在仓库存</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="overseasItem in overseas">
+								<td>{{$index+1}}</td>
+								<td>{{overseasItem.warehouse_name}}</td>
+								<td>{{overseasItem.overseas_stock_qty}}</td>
+							</tr>
+						</tbody>
+					</table>-->
+				<div>
+					<form role="form" class="form-inline" name="formOption" role="form" novalidate>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="form-label">中文名称：{{ productNameS }}</label>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="form-label">库存SKU：{{ productSkuS }}</label>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div style="height: 600px; overflow-y: auto;">
+					<table class="table table-bordered table-hover table-condensed text-center">
+						<thead>
+							<tr>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">序号</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">仓库</th>
+								<th style="text-align: center;font-weight: bolder;border: 2px solid #C8C8C8;">在仓库存</th>
+							</tr>
+						</thead>
+						<tbody ng-repeat="overseasItem in overseas">
+							<tr>
+								<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ $index+1 }}</td>
+								<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ overseasItem.warehouse_name }}</td>
+								<td style="vertical-align: middle;border: 2px solid #C8C8C8;">{{ overseasItem.overseas_stock_qty }}</td>
+							</tr>
+						</tbody>
+						<tbody ng-if="!overseas.length">
+							<td class="text-warning" colspan="7">此项没有海外在仓记录</td>
+						</tbody>
+					</table>
+				</div>
+				<!--</div>-->
+			</div>
+		</div>
+	</div>
+</div>
+
+<div load-icon is-load="isLoad"></div>

@@ -1,0 +1,59 @@
+<style>
+	.note-resizebar {
+		display: none;
+	}
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5><strong>添加日志</strong></h5>
+					<div ibox-tools></div>
+				</div>
+				<div class="ibox-content">
+					<div class="row">
+						<form class="form-horizontal" name="formAdd" role="form" novalidate>
+							<div class="row">
+								<div class="form-group col-lg-4">
+									<label class="col-sm-3 control-label" style="margin-top: 10px;">
+                            			<span class="text-danger">*</span>
+                            			版本号
+                        			</label>
+
+									<div class="col-sm-6 control-label">
+										<input type="text" class="form-control" name="versionNumber" id="versionNumber" ng-model="versionNumber" >
+										<div class="m-t-xs">
+											<span class="pull-left text-danger">
+			                                	 {{versionNumberPlaceholder}}
+			                                </span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="row">
+						<div class="col-lg-12">
+
+							<!--更新日志编辑-->
+							<div class="ibox-content no-padding" style="border: 1px #DCDCDC solid;">
+								<div id="summernote" summernote class="summernote" config="options" ng-model="summernoteText">
+
+								</div>
+							</div>
+							<!--/更新日志编辑-->
+
+							<div style="padding-top: 15px;">
+								<button class="pull-left btn btn-primary btn-w-m" ng-click="submitText()">提交</button>
+								<button class="btn btn-white btn-w-m" style="margin-left: 10px;" ng-click="clearContent()">清空</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

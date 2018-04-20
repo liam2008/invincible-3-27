@@ -1,0 +1,33 @@
+<style>
+	.note-resizebar{
+		display: none;
+	}
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5><strong>添加日志</strong></h5>
+                    <div ibox-tools></div>
+                </div>
+                <div class="ibox-content">
+                	 <div class="row">
+				        <div class="col-lg-12">
+				            <div class="ibox-content no-padding">
+				                <div id="summernote" summernote class="summernote" config="options" ng-model="summernoteText" lang="zh-CN"></div><!--height="300"-->
+				            </div>
+				            <div>
+				            	<button class="btn btn-success" ng-click="submitText()">
+				            		保存
+				            	</button>
+				            </div>
+				        </div>
+				    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div load-icon is-load="isLoad"></div>
+</div>

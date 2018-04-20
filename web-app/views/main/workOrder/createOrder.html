@@ -1,0 +1,92 @@
+<style>
+	.slick-dots {
+		bottom: -34px;
+	}
+</style>
+<!--表格-->
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox">
+		<slick ng-if="noticeList.length" autoplay="true" dots="true" autoplay-speed="5000">
+			<div ng-repeat="item in noticeList">
+				<div class="ibox-content">
+					<h3>{{item.title}}</h3>
+					<p style="max-height:121px;overflow:auto;white-space:pre-line;">{{item.content}}</p>
+				</div>
+			</div>
+		</slick>
+	</div>
+
+	<div class="ibox float-e-margins">
+		<div class="ibox-title">
+			<h5>创建工单</h5>
+		</div>
+		<div class="ibox-content">
+			<div class="row p-xs">
+				<form class="form-horizontal col-xs-4" name="formAdd" role="form" novalidate>
+					<fieldset class="form-group">
+						<label><span class="text-danger">*</span>创建人</label>
+						<input class="form-control" ng-model="account.name" readonly>
+					</fieldset>
+					<fieldset class="form-group">
+						<label><span class="text-danger">*</span>类目组</label>
+						<select class="chosen-select" name="teams" id="teams" chosen ng-model="initData.operateTeam" ng-options="item['_id'] as item.name for item in teamList" required>
+							<option value>请选择类目组</option>
+						</select>
+						<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.teams.$invalid">
+							<small class="text-danger" ng-show="formAdd.teams.$error.required">类目组不能为空</small>
+						</div>
+					</fieldset>
+					<fieldset class="form-group">
+						<label><span class="text-danger">*</span>问题类型</label>
+						<select class="form-control" name="WOType" id="WOType" ng-change="changeTips()" ng-model="initData.WOType" ng-options="item['type'] as item.name for item in typeList" required>
+							<option value>请选择类型</option>
+						</select>
+						<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.WOType.$invalid">
+							<small class="text-danger" ng-show="formAdd.WOType.$error.required">问题类型不能为空</small>
+						</div>
+					</fieldset>
+					<fieldset class="form-group" ng-if="activeItem.isAsin">
+						<label><span class="text-danger">*</span>ASIN</label>
+						<select class="chosen-select" name="asin" chosen ng-model="initData.asin" ng-options="item for item in asinList" required>
+							<option value>请选择ASIN</option>
+						</select>
+						<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.asin.$invalid">
+							<small class="text-danger" ng-show="formAdd.asin.$error.required">ASIN不能为空</small>
+						</div>
+					</fieldset>
+					<fieldset class="form-group" ng-if="activeItem.isAsin">
+						<label><span class="text-danger">*</span>店铺</label>
+						<select class="chosen-select" name="shop_name" chosen ng-model="initData.shop_name" ng-options="item for item in shopList" required>
+							<option value>请选择店铺</option>
+						</select>
+						<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.shop_name.$invalid">
+							<small class="text-danger" ng-show="formAdd.shop_name.$error.required">店铺不能为空</small>
+						</div>
+					</fieldset>
+					<fieldset class="form-group" style="position:relative;">
+						<label><span class="text-danger">*</span>内容</label>
+						<textarea class="form-control" name="content" id="content" cols="45" rows="10" ng-model="initData.content" required></textarea>
+						<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.content.$invalid">
+							<small class="text-danger" ng-show="formAdd.content.$error.required">内容不能为空</small>
+						</div>
+						<span class="btn btn-white" style="position:relative;top:-34px;left:101%;overflow:hidden;">
+							<input type="file" id="file" multiple onchange="angular.element(this).scope().upload(this)" style="position:absolute;top:0;left:0;font-size:24px;opacity:0;">
+							<i class="fa fa-folder-open-o"></i>&nbsp;&nbsp;<span class="bold">选择文件</span>
+						</span>
+						<ul style="position:absolute;bottom:72px;left:101%;padding-left:0;">
+							<li ng-repeat="item in files" style="max-width:240px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{item.name}}</li>
+						</ul>
+					</fieldset>
+					<button class="btn btn-primary btn-w-m" ng-click="post()">提交</button>
+					<button class="btn btn-white btn-w-m m-l" ng-click="cancel()">取消</button>
+				</form>
+				<ul class="col-xs-4 col-xs-offset-3 list-unstyled">
+					<li ng-show="activeItem.tips">
+						<h2>{{activeItem.name + ' 工单说明'}}</h2>
+						<p style="white-space: pre-line;">{{activeItem.tips}}</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

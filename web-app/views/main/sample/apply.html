@@ -1,0 +1,299 @@
+<style>
+	.daterangepicker .ranges {
+		width: 180px;
+	}
+	
+	.daterangepicker .ranges .input-mini {
+		width: 80px;
+	}
+	
+	table.table tr td {
+		vertical-align: middle;
+	}
+	
+	.unappearance {
+		background-color: transparent;
+		border: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	}
+	
+	.lin-dropdown {
+		position: relative;
+		cursor: pointer;
+	}
+	
+	.lin-dropdown:hover .lin-dropdown-content {
+		display: block;
+	}
+	
+	.lin-dropdown .lin-dropdown-nav {
+		width: 216px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	
+	.lin-dropdown .lin-dropdown-content {
+		display: none;
+		position: absolute;
+		right: 0;
+		bottom: 80%;
+		width: 360px;
+		max-height: 216px;
+		background-color: #fff;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+		border-radius: 4px;
+		list-style: none;
+		cursor: default;
+		z-index: 10;
+	}
+	
+	.lin-dropdown .lin-dropdown-content:after {
+		position: absolute;
+		bottom: -11px;
+		left: 216px;
+		width: 0;
+		height: 0;
+		content: '';
+		border: 6px solid transparent;
+		border-top-color: #fff;
+	}
+	
+	.lin-dropdown ul {
+		margin: 0;
+		padding-left: 0;
+		max-height: 216px;
+		list-style: none;
+		overflow-x: auto;
+	}
+	
+	.lin-dropdown li {
+		margin: 0 10px;
+		padding: 10px 0;
+		line-height: 1.5;
+		background-color: #fff;
+		border-bottom: 1px solid #ecf5ff;
+	}
+	
+	.lin-dropdown li:last-child {
+		border: none;
+	}
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<h5>{{ activeShow||'样品申请' }}</h5>
+				</div>
+				<!-- 首页列表 -->
+				<section class="ibox-content" id="sectionA" ng-if="!activeShow">
+					<nav class="form-inline">
+						<div class="form-group m-r">
+							<label>样品名称</label>
+							<input class="form-control" ng-model="where.name">
+						</div>
+						<div class="form-group m-r">
+							<label>申请时间</label>
+							<input class="form-control date-picker" id="daterange" ng-model="daterange" date-range-picker options="{separator:' 至 ',locale:{format:'YYYY-MM-DD',fromLabel:'开始',toLabel:'结束',applyLabel:'应用',cancelLabel:'取消'}}">
+						</div>
+						<div class="form-group m-r">
+							<label>样品状态</label>
+							<select class="form-control" ng-model="where.status">
+								<option value>全部</option>
+								<option value="100">未借出</option>
+								<option value="200">部分借出</option>
+								<option value="300">全部借出</option>
+							</select>
+						</div>
+						<div class="form-group m-r">
+							<label>查看</label>
+							<select class="form-control" ng-model="where.views">
+								<option value>全部</option>
+								<option>仅查看可借出</option>
+								<option>仅查看我借出</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<button class="btn btn-info" ng-click="handlePagination(1)">查 询</button>
+						</div><br>
+						<div class="btn-group m-t m-b">
+							<button class="btn btn-white" ng-click="handleActive('申请借出', item)">申请借出</button>
+							<button class="btn btn-white" ng-click="handleActive('取消借出', item)">取消借出</button>
+						</div>
+					</nav>
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th width="38" class="text-center"><input type="checkbox" ng-model="checkAll" id="checkAll" ng-click="checked({checkAll:checkAll})"></th>
+								<th width="120">编号</th>
+								<th width="70">状态</th>
+								<th width="77" class="text-center">样品图片</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th width="120">样品参数</th>
+								<th width="45">单位</th>
+								<th width="74">单价</th>
+								<th width="74">数量</th>
+								<th width="74">已借数量</th>
+								<th width="74">可借数量</th>
+								<th>备注</th>
+								<th width="142">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in sampleList">
+								<td class="text-center"><input type="checkbox" ng-checked="checkAll" ng-model="check" ng-click="checked({check:check,item:item})"></td>
+								<td>{{ item.id }}</td>
+								<td>
+									<select class="unappearance" ng-init="item.status=''+item.status" ng-model="item.status">
+										<option value>全部</option>
+										<option value="100">未借出</option>
+										<option value="200">部分借出</option>
+										<option value="300">全部借出</option>
+									</select>
+								</td>
+								<td><img src="{{ item.img }}" style="max-width:60px;max-height:60px;" alt="暂无图片"></td>
+								<td>{{ item.name }}</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td class="text-center">{{ item.unit }}</td>
+								<td>{{ item.price }}</td>
+								<td>{{ item.number }}</td>
+								<td>{{ item.borrow }}</td>
+								<td>{{ item.canBorrow }}</td>
+								<td class="lin-dropdown">
+									<div class="lin-dropdown-nav">{{ item.remarks[item.remarks.length-1] }}</div>
+									<div class="lin-dropdown-content">
+										<ul>
+											<li ng-repeat="remark in item.remarks">{{ remark }}</li>
+										</ul>
+									</div>
+
+								</td>
+								<td>
+									<button class="btn btn-info btn-xs" ng-click="handleActive('借还记录', item)">借还记录</button>
+									<button class="btn btn-primary btn-xs" ng-click="handleActive('添加备注', item)">添加备注</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<lin-pagination></lin-pagination>
+				</section>
+				<!-- /首页列表 -->
+				<!-- 申请借出 -->
+				<section class="ibox-content" id="sectionB" ng-if="activeShow=='申请借出'||activeShow=='取消借出'">
+					<nav class="form-inline m-b">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="activeItem.applicant">
+						</div>
+					</nav>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th width="120">编号</th>
+								<th width="77" class="text-center">样品图片</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th width="120">样品参数</th>
+								<th width="74">单价</th>
+								<th width="74">已借数量</th>
+								<th width="102" class="text-center">申请数量</th>
+								<th width="140" class="text-center">预计归还时间</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in activeItem.details">
+								<td>{{ item.id }}</td>
+								<td><img src="{{ item.img }}" style="max-width:60px;max-height:60px;" alt="暂无图片"></td>
+								<td>{{ item.name }}</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td>{{ item.price }}</td>
+								<td>{{ item.canBorrow }}</td>
+								<td><input class="form-control input-sm" ng-model="item.quantity"></td>
+								<td><input class="form-control input-sm" ng-model="item.returnTime"></td>
+							</tr>
+						</tbody>
+					</table>
+					<aside class="m-b">
+						<button class="btn btn-primary btn-w-m" ng-click="handleSave()">确 认</button>
+						<button class="btn btn-white btn-w-m m-l" ng-click="handleActive()">取 消</button>
+					</aside>
+				</section>
+				<!-- /申请借出 -->
+				<!-- 借还记录 -->
+				<section class="ibox-content" id="sectionC" ng-if="activeShow=='借还记录'">
+					<nav class="form-inline m-b">
+						<div class="form-group m-r">
+							<label>申请人</label>
+							<input class="form-control" ng-model="activeItem.applicant">
+						</div>
+						<div class="form-group m-r">
+							<label>操作人</label>
+							<input class="form-control" ng-model="activeItem.applicant">
+						</div>
+						<div class="form-group m-r">
+							<label>变动类型</label>
+							<select class="form-control">
+								<option value>请选择</option>
+								<option>确认借出</option>
+								<option>确认归还</option>
+							</select>
+						</div>
+					</nav>
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th>样品名称</th>
+								<th>供应商</th>
+								<th>样品参数</th>
+								<th>申请人</th>
+								<th>逾期次数</th>
+								<th>变动类型</th>
+								<th>库存数量</th>
+								<th>已借数量</th>
+								<th>可借数量</th>
+								<th>操作人</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in activeItem">
+								<td>{{ item.id }}</td>
+								<td>{{ item.name }}</td>
+								<td>{{ item.supplier }}</td>
+								<td>
+									<div>型号：{{ item.model }}</div>
+									<div>规格：{{ item.spec }}</div>
+									<div>颜色：{{ item.color }}</div>
+								</td>
+								<td>{{ item.applicant }}</td>
+								<td>{{ item.overdue }}</td>
+								<td>{{ item.change }}</td>
+								<td>{{ item.number }}</td>
+								<td>{{ item.borrow }}</td>
+								<td>{{ item.canBorrow }}</td>
+								<td>{{ item.applicant }}</td>
+							</tr>
+						</tbody>
+					</table>
+					<aside class="m-b">
+						<button class="btn btn-white btn-w-m m-l" ng-click="handleActive()">取 消</button>
+					</aside>
+				</section>
+				<!-- /借还记录 -->
+			</div>
+		</div>
+	</div>
+</div>

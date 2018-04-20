@@ -1,0 +1,471 @@
+<style>
+	.mydropdown {
+		position: relative;
+	}
+	
+	.mydropdown-nav {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	
+	.mydropdown-nav span {
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	
+	.mydropdown-content {
+		display: none;
+		position: absolute;
+		z-index: 5;
+		line-height: 20px;
+		right: 100%;
+		bottom: 0;
+		width: 470px;
+		max-width: 470px;
+		min-height: 80px;
+		max-height: 250px;
+		margin-bottom: 0;
+		padding: 8px 10px 10px 10px;
+		white-space: normal;
+		overflow-y: auto;
+		background-color: #fff;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+		border-radius: 4px;
+	}
+	
+	.mydropdown-content li {
+		padding-top: 10px;
+		border-top: 1px solid #eaeefb;
+	}
+	
+	.mydropdown-content-title {
+		text-align: center;
+		font-size: 16px;
+		font-weight: bold;
+		height: 30px;
+		line-height: 30px;
+	}
+	
+	.mydropdown-content-title span {
+		display: inline-block;
+		position: relative;
+		left: 41%;
+		width: 30px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		border-radius: 3px;
+	}
+	
+	.mydropdown-content-title span:hover {
+		background-color: #F2FBFF;
+	}
+	
+	.mydropdown-content li:first-child {
+		margin-top: 0;
+		padding-top: 2px;
+		border-top: none;
+	}
+	
+	.mydropdown:hover .mydropdown-content {
+		display: block
+	}
+	
+	.addRemarkList {
+		white-space: normal !important;
+	}
+	
+	.saveOkIcon {
+		width: 30px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		margin-left: 363px;
+	}
+	
+	.saveRemoveIcon {
+		width: 30px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		margin-left: 5px;
+	}
+	
+	.saveOkIcon:hover {
+		background-color: #1ab394;
+		border-radius: 3px;
+	}
+	
+	.saveRemoveIcon:hover {
+		background-color: #ed5565;
+		border-radius: 3px;
+	}
+	
+	.table tbody tr td {
+		vertical-align: middle;
+		padding: 8px 2px;
+	}
+	
+	.chosen-container-multi {
+		min-width: 215px;
+		max-width: 610px;
+		width: auto!important;
+	}
+	
+	.lin-dropdown {
+		position: relative;
+		width: 100px;
+	}
+	
+	.lin-dropdown:hover .lin-dropdown-content {
+		display: block;
+	}
+	
+	.lin-dropdown .lin-dropdown-nav {
+		width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		cursor: pointer;
+	}
+	
+	.lin-dropdown .lin-dropdown-content {
+		display: none;
+		position: absolute;
+		right: 100%;
+		bottom: 0;
+		width: 300px;
+		background-color: #fff;
+		border: 1px #fff solid;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+		border-radius: 4px;
+		cursor: default;
+		z-index: 10;
+		cursor: pointer;
+	}
+	
+	.lin-dropdown .lin-dropdown-content:after {
+		position: absolute;
+		bottom: 18px;
+		right: -11px;
+		width: 0;
+		height: 0;
+		content: '';
+		border: 6px solid transparent;
+		border-left-color: #fff;
+	}
+	
+	#editRowB .chosen-container {
+		width: 100%!important;
+	}
+	
+	.slick-dots {
+		bottom: -34px;
+	}
+</style>
+<!--表格-->
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox">
+		<slick ng-if="noticeList.length" autoplay="true" dots="true" autoplay-speed="5000">
+			<div ng-repeat="item in noticeList">
+				<div class="ibox-content">
+					<h3>{{item.title}}</h3>
+					<p style="max-height:121px;overflow:auto;white-space:pre-line;">{{item.content}}</p>
+				</div>
+			</div>
+		</slick>
+	</div>
+	<div class="ibox">
+		<div class="ibox-title">
+			<h5>待处理工单</h5>
+			<div ibox-tools></div>
+		</div>
+		<div class="ibox-content">
+			<!--选择-->
+			<form role="form" class="form-inline" name="formOption" role="form" novalidate>
+				<div class="row">
+					<div class="col-lg-2">
+						<div class="form-group">
+							<input type="text" name="creator" ng-model="where.creator" class="form-control" placeholder="创建人">
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group">
+							<input type="text" name="handler" ng-model="where.handler" class="form-control" placeholder="当前处理人">
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group">
+							<input type="text" name="treated" ng-model="where.treated" class="form-control" placeholder="参与处理人">
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="form-label">开始日期</label>
+							<div class="input-group date">
+								<input type="datetime" class="form-control" date-time ng-model="where.startTime" view="date" auto-close="true" min-view="date" format="YYYY-MM-DD">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label class="form-label">结束日期</label>
+							<div class="input-group date">
+								<input type="datetime" class="form-control" date-time ng-model="where.endTime" view="date" auto-close="true" min-view="date" format="YYYY-MM-DD">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row m-t">
+					<div class="col-lg-2">
+						<div class="form-group">
+							<input class="form-control" ng-model="where.asin" placeholder="ASIN">
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group">
+							<input class="form-control" ng-model="where.orderId" placeholder="编号">
+						</div>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group">
+							<select class="form-control" name="handle" id="handle" ng-model="where.handle" style="width: 177px;">
+								<option value="">处理状态</option>
+								<option value="0">待处理</option>
+								<option value="1">处理中</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="form-group m-r">
+							<label class="form-label">问题类型</label>
+							<select multiple chosen class="form-control chosen-select" ng-model="where.type" ng-options="item['type'] as item.name for item in problemTypesList">
+								<option value>问题类型</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row m-t">
+					<div class="col-lg-6">
+						<button type="button" class="btn btn-primary btn-w-m" ng-click="handlePagination(1)">查 询</button>
+						<button type="button" class="btn btn-default btn-w-m m-l" ng-click="resetFn()">重 置</button>
+						<button type="button" class="btn btn-info btn-w-m m-l" ng-click="batchRedeploy()" data-toggle="modal" data-target="#editRowA">批量完结</button>
+						<button type="button" class="btn btn-info btn-w-m m-l" ng-click="batchRedeploy()" data-toggle="modal" data-target="#editRowB">批量转派</button>
+					</div>
+				</div>
+			</form>
+
+			<!--表格-->
+			<div class="row m-t-lg">
+				<table class="footable table table-stripped toggle-arrow-tiny" data-page-size="100">
+					<thead>
+						<tr style="white-space: nowrap;">
+							<th data-sort-ignore="true"><input type="checkbox" ng-model="checkAll" ng-click="checked({checkAll:checkAll})"></th>
+							<th data-toggle="true">序号</th>
+							<th>工单编号</th>
+							<th>ASIN</th>
+							<th>产品中文名</th>
+							<th>店铺</th>
+							<th>类型</th>
+							<th>创建人</th>
+							<th>当前处理人</th>
+							<th>主管</th>
+							<th>类目组</th>
+							<th>FBA库存</th>
+							<th>
+								<div>创建时间</div>
+								<span>最迟处理时间</span>
+							</th>
+							<th>ASIN状态</th>
+							<th>备注</th>
+							<th>操作</th>
+							<th data-hide="all">工单内容</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="value in tableList">
+							<td class="text-center">
+								<input type="checkbox" ng-model="value.check" ng-click="checked({check:value})">
+							</td>
+							<td>
+								{{$index+1}}
+							</td>
+							<td>
+								<span class="fa fa-flag" ng-if="value.handle" ng-click="toggleHandleState(value)" title="处理中：{{value.handleTime | date:'yyyy-MM-dd HH:mm:ss'}}"> {{value.orderID || '-'}}</span>
+								<span class="fa fa-flag-o" ng-if="!value.handle" ng-click="toggleHandleState(value)" title="待处理"> {{value.orderID || '-'}}</span>
+							</td>
+							<td>
+								{{ value.asin || '-'}}
+							</td>
+							<td class="lin-dropdown">
+								<span ng-if="!value.product">-</span>
+								<div ng-if="value.product" class="lin-dropdown-nav">{{ value.product }}</div>
+								<div ng-if="value.product" class="lin-dropdown-content">
+									<div style="padding:12px;max-height:288px;overflow-x:auto;">{{ value.product }}</div>
+								</div>
+							</td>
+							<td>
+								{{value.shop_name || '-'}}
+							</td>
+							<td>
+								{{ typeSelect(value.type) }}
+							</td>
+							<td>
+								{{value.creator || '-'}}
+							</td>
+							<td>
+								{{value.handler || '-'}}
+							</td>
+							<td>
+								{{value.leader || '-'}}
+							</td>
+							<td>
+								{{value.team_name || '-'}}
+							</td>
+							<td>
+								{{value.fba_stock || '-'}}
+							</td>
+							<td>
+								<div title="创建时间">{{value.createdAt | date:'yyyy-MM-dd HH:mm:ss' || '-'}}</div>
+								<div title="最迟处理时间" ng-if="value.handlingTime" class="bg-danger">{{value.handlingTime | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+								<div title="提醒处理时间" ng-if="value.reminderTime" class="bg-warning">{{value.reminderTime | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+							</td>
+							<td>
+								{{value.status || '-'}}
+							</td>
+							<td class="mydropdown" style="max-width: 100px;">
+								<div class="mydropdown-nav">
+									<span>{{value.remarks[0].content || '-'}}</span>
+								</div>
+								<ol class="mydropdown-content" ng-show="true" style="list-style: none;">
+									<li class="mydropdown-content-title">历史备注<span class="fa fa-edit" title="添加备注" data-toggle="modal" data-target="#editRemark" ng-click="operateRemark(value, $index)"></span></li>
+									<li ng-repeat="remark in value.remarks">
+										<span><i class="fa fa-user-circle" style="display: inline-block;margin-right: 10px;"></i> {{remark.writer.name}} </span>
+										<span style="margin-left: 30%;"><i class="fa fa-clock-o" style="display: inline-block;margin-right: 13px;"></i> {{remark.createdAt | date: 'yyyy-MM-dd HH:mm:ss'}} </span><br>
+										<div style="display: inline;word-wrap: break-word;"><i class="fa fa-stack-exchange" style="display: inline-block;margin-right: 15px;"></i> {{remark.content || '-'}} </div>
+									</li>
+								</ol>
+							</td>
+							<td>
+								<button class="btn btn-primary btn-outline btn-sm" type="button" ui-sref="main.workOrder.toDeal({id:value.id,fromPage:'main.workOrder.dealingOrder',currentPage:where.currentPage})">处理</button> &nbsp;&nbsp;&nbsp;
+								<button class="btn btn-danger btn-outline btn-sm" type="button" ui-sref="main.workOrder.turnOrder({id:value.id,frompage:''})">转派</button>
+							</td>
+							<td ng-bind-html="value.content | trustHtml:value.type"></td>
+						</tr>
+					</tbody>
+				</table>
+				<select class="form-control input-sm" ng-change="handlePagination({pageSize:where.pageSize})" ng-model="where.pageSize" ng-options="item+' / 页' for item in [10,25,50,100]" style="float:left;width:auto;height: auto;"></select>
+				<lin-pagination></lin-pagination>
+			</div>
+		</div>
+
+		<!--批量完结-->
+		<div class="modal inmodal fade" id="editRowA" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" style="width: 50%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+						<h4 class="modal-title">批量完结</h4>
+					</div>
+					<form class="modal-body form-horizontal">
+						<fieldset class="form-group">
+							<label><span class="text-danger">*</span> 处理意见</label>
+							<textarea class="form-control" cols="45" rows="10" ng-model="log"></textarea>
+						</fieldset>
+					</form>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white btn-w-m m-r" data-dismiss="modal">取 消</button>
+						<button type="button" class="btn btn-primary btn-w-m" ng-disabled="!log" ng-click="saveData()">完 结</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--批量转派-->
+		<div class="modal inmodal fade" id="editRowB" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" style="width: 50%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+						<h4 class="modal-title">批量转派</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" name="editForm" role="form" novalidate>
+							<div class="row">
+								<div class="col-lg-6 col-sm-offset-3">
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span class="text-danger">*</span>
+											当前处理人
+			                           </label>
+										<div class="col-sm-9">
+											<p class="form-control-static">{{account.name}}</p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-6 col-sm-offset-3">
+									<div class="form-group">
+										<label class="col-sm-3 control-label"><span class="text-danger">*</span>
+											转派处理人
+                           				</label>
+										<div class="col-sm-9">
+											<select class="chosen-select" chosen name="handler" id="handler" ng-model="handler" ng-options="item._id as item.name for item in customers">
+												<option value>请选择处理人</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-6 col-sm-offset-3">
+									<div class="form-group">
+										<label class="col-sm-3 control-label">备注</label>
+										<div class="col-sm-9">
+											<textarea class="form-control" ng-model="remark" rows="10"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white btn-w-m m-r" data-dismiss="modal">取 消</button>
+						<button type="button" class="btn btn-primary btn-w-m" ng-click="saveData()">转 派</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--弹出修改框-->
+	<div class="modal inmodal fade" id="editRemark" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width: 35%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">添加备注</h4>
+				</div>
+				<div id="orderDetails" class="modal-body">
+					<div>
+						<span class="col-sm-4" style="padding: 0;">工单编号：{{ itemData.orderID }}</span>
+						<span class="col-sm-4">ASIN：{{ itemData.asin }}</span>
+						<span class="col-sm-4">店铺：{{ itemData.shop_name }}</span>
+					</div>
+					<div style="margin-top: 20px;padding-top: 10px;">
+						<textarea class="form-control" placeholder="请在此添加备注" name="remarkText" ng-model="remarkText.remark" rows="3" cols="10"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal" ng-click="saveRemark()">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div load-icon is-load="isLoad"></div>
+</div>

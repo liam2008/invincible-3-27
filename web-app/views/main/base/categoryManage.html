@@ -1,0 +1,190 @@
+<style>
+	/*添加品类的控件间隔*/
+	.form-group{
+		margin-bottom: 40px;
+	}
+	.form-control{
+		display: inline-block;
+		width: 84%;
+		margin-left: 7px;
+	}
+	.tips-left{
+		margin-left: 77px;
+	}
+</style>
+
+<!--展示-->
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<h5>品类管理</h5>
+				</div>
+				<!-- 首页列表 -->
+				<section class="ibox-content" id="sectionA">
+					<table class="table table-striped table-bordered table-hover" datatable="ng" dt-options="dtOptions">
+						<thead style="white-space: nowrap;">
+							<tr>
+								<th>序号</th>
+								<th>品类名称</th>
+								<th>品类简称</th>
+								<th>品类中文名</th>
+								<th>创建时间</th>
+								<th>修改时间</th>
+								<th style="width: 15%;">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in categoryList">
+								<td>{{ $index+1 }}</td>
+								<td>{{ item.name || '-'}}</td>
+								<td>{{ item.shortName || '-'}}</td>
+								<td>{{ item.chineseName || '-'}}</td>
+								<td style="white-space: nowrap;">{{ item.createdAt | date:'yyyy-MM-dd HH:mm:ss' || '-'}}</td>
+								<td style="white-space: nowrap;">{{ item.updatedAt |  date:'yyyy-MM-dd HH:mm:ss' || '-'}}</td>
+								<td style="text-align: center;">
+									<button class="btn btn-primary btn-outline btn-sm" data-toggle="modal" data-target="#editModal" ng-click="edit(item)">编辑</button>
+									<button class="btn btn-danger btn-outline btn-sm" ng-click="delete(item)">删除</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+				<!-- /首页列表 -->
+			</div>
+		</div>
+	</div>
+</div>
+<!--添加品类-->
+<div id="addCategoryModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+				<h4 class="modal-title">添加品类</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" name="formAdd" role="form" novalidate>
+					<div class="form-group">
+						<div>
+							<label>
+                             	品类名称 <span class="text-danger">*</span>	
+                       		</label>
+                       		<input type="text" class="form-control" name="addCategoryName" ng-model="addCategoryData.name" ng-model-options="{ updateOn: 'blur' }" placeholder="名称为英文字符组成" required/>
+							<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.addCategoryName.$invalid">
+								<small class="text-danger tips-left" ng-show="formAdd.addCategoryName.$error.required">
+									品类名称不能为空
+                            	</small>
+							</div>
+							<small class="text-danger tips-left" ng-show=" ! addIsNotChinese">
+									名称应为英文字符组成
+                            </small>
+						</div>
+					</div>
+					<div class="form-group">
+						<div>
+							<label>
+                             	品类简称 <span class="text-danger">*</span>	
+                       		</label>
+							<input type="text" class="form-control" name="addCategoryShortName" ng-model="addCategoryData.shortName" ng-model-options="{ updateOn: 'blur' }" placeholder="请输入三位英文字母" required/>
+							<div class="m-t-xs" ng-show="formAdd.submitted && formAdd.addCategoryShortName.$invalid">
+								<small class="text-danger tips-left" ng-show="formAdd.addCategoryShortName.$error.required">
+                          			品类简称不能为空
+                                </small>
+							</div>
+							<small class="text-danger tips-left" ng-show=" ! addIsShortName">
+									品类简称只能为三位字母
+                            </small>
+						</div>
+					</div>
+					<div class="form-group" style="margin-bottom: 20px;">
+						<div>
+							<label>
+                             	品类中文名 	
+                       		</label>
+							<input type="text" class="form-control" name="addCategoryChineseName" ng-model="addCategoryData.chineseName" ng-model-options="{ updateOn: 'blur' }" placeholder="请输入中文" style="margin-left: 4px;">
+							<div>
+								<small class="text-danger tips-left" ng-show=" ! addIsChinese">
+                          			输入应为中文
+                                </small>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer" style="text-align: right;padding-right:15px;">
+				<button class="btn btn-primary" ng-click="addCategory()">添加</button>
+				<button class="btn btn-white m-l" data-dismiss="modal">返回</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--编辑品类-->
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+				<h4 class="modal-title">编辑品类</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" name="formEdit" role="form" novalidate>
+					<div class="form-group">
+						<div>
+							<label>	
+								品类名称<span class="text-danger">*</span>
+							</label>
+							<input type="text" class="form-control" name=" categoryName" ng-model="activeItem.name" ng-model-options="{ updateOn: 'blur' }" placeholder="名称为英文字符组成" required/>
+							<div class="m-t-xs" ng-show="formEdit.submitted && formEdit.categoryName.$invalid">
+								<small class="text-danger tips-left" ng-show="formEdit.categoryName.$error.required">
+                          			品类名称不能为空
+                                </small>
+							</div>
+							<small class="text-danger tips-left" ng-show=" ! editIsNotChinese">
+                          			名称应为英文字符组成
+                            </small>
+						</div>
+					</div>
+					<div class="form-group">
+						<div>
+							<label>	
+								品类简称<span class="text-danger">*</span>
+							</label>
+							<input type="text" class="form-control" name=" categoryShortName" ng-model="activeItem.shortName" ng-model-options="{ updateOn: 'blur' }" placeholder="请输入三位英文字母" required/>
+							<div class="m-t-xs" ng-show="formEdit.submitted && formEdit.categoryShortName.$invalid">
+								<small class="text-danger tips-left" ng-show="formEdit.categoryShortName.$error.required">
+                          			品类简称不能为空
+                                </small>
+							</div>
+							<small class="text-danger tips-left" ng-show=" ! editIsShortName">
+                          			品类简称只能为三位字母
+                            </small>
+						</div>
+					</div>
+					<div class="form-group" style="margin-bottom: 20px;">
+						<div>
+							<label>	
+								品类中文名
+							</label>
+							<input type="text" class="form-control" name=" categoryChineseName" ng-model="activeItem.chineseName" ng-model-options="{ updateOn: 'blur' }" placeholder="请输入中文" style="margin-left: 0;">
+							<div>
+								<small class="text-danger tips-left" ng-show=" ! editIsChinesee">
+                          			输入应为中文
+                            	</small>
+							</div>
+							
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer" style="text-align: right;padding-right: 15px;">
+					<button class="btn btn-primary add-site" ng-click="save()">保存</button>
+					<button class="btn btn-white m-l clear-site" data-dismiss="modal">返回</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

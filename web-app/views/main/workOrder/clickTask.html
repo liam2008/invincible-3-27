@@ -1,0 +1,193 @@
+<style>
+	.unappearance {
+		background-color: transparent;
+		border: none;
+		outline: none;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+	}
+	
+	#sectionA .table td {
+		vertical-align: middle;
+	}
+	
+	.note {
+		position: relative;
+	}
+	
+	.note .content {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		padding: 8px;
+	}
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox">
+				<div class="ibox-title">
+					<h5>点击任务</h5>
+				</div>
+				<!-- 首页列表 -->
+				<section class="ibox-content" id="sectionA">
+					<table class="table table-hover" datatable="ng" dt-options="dtOptions">
+						<thead>
+							<tr>
+								<th>任务执行时间（美国）</th>
+								<th>ASIN</th>
+								<th>关键字</th>
+								<th>类目</th>
+								<th>sellerID</th>
+								<th>执行次数</th>
+								<th>任务状态</th>
+								<th>关键字排行</th>
+								<th width="37">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in taskList">
+								<td>{{ item.ExecuteTime | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+								<td>{{ item.Asin }}</td>
+								<td>{{ item.Keyword }}</td>
+								<td>{{ item.Category }}</td>
+								<td>{{ item.SellerId }}</td>
+								<td>{{ item.ExecuteNum }}</td>
+								<td>
+									<select ng-model="item.Status" class="unappearance" disabled>
+										<option value="0">未开始</option>
+										<option value="1">进行中</option>
+										<option value="2">已完成</option>
+									</select>
+								</td>
+								<td class="note">
+									<input class="form-control input-sm" ng-model="item.Note" readonly>
+									<button class="btn btn-white btn-sm" ng-click="changeNote(item,false)" ng-if="isNoteActive">编辑</button>
+									<aside class="content" ng-if="showNote==item.Id">
+										<input class="form-control input-sm" ng-model="Note" autofocus ng-blur="unShowNote()">
+										<button class="btn btn-info btn-sm" ng-click="changeNote(item,true,Note)">保存</button>
+									</aside>
+								</td>
+								<td><button class="btn btn-white btn-sm" ng-click="update(item)" ng-if="isUpdateActive"><i class="fa fa-pencil"></i> {{ item.Status==2?'详情':'编辑' }}</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 保存任务 -->
+<aside class="modal fade" id="saveTaskModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">
+					<span ng-if="taskItem.Status==2">任务详细</span>
+					<span ng-if="taskItem.Status!=2">{{ taskItem.Id?'任务更新':'任务添加' }}</span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<figcaption class="form-group">
+						<label class="col-sm-4 control-label"><span class="text-danger">*</span>（美国）执行时间</label>
+						<div class="col-sm-8">
+							<div class="input-group date">
+								<input type="datetime" class="form-control" date-time ng-model="taskItem.ExecuteTime" view="month" auto-close="true" ng-disabled="taskItem.Status==2" required>
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+					</figcaption>
+					<figcaption class="form-group">
+						<label class="col-sm-4 control-label"><span class="text-danger">*</span>ASIN</label>
+						<div class="col-sm-8"><input ng-model="taskItem.Asin" class="form-control" ng-disabled="taskItem.Status==2" required></div>
+					</figcaption>
+					<figcaption class="form-group">
+						<label class="col-sm-4 control-label"><span class="text-danger">*</span>关键字</label>
+						<div class="col-sm-8"><input ng-model="taskItem.Keyword" class="form-control" ng-disabled="taskItem.Status==2" required></div>
+					</figcaption>
+					<figcaption class="form-group">
+						<label class="col-sm-4 control-label"><span class="text-danger">*</span>类目</label>
+						<div class="col-sm-8">
+							<select class="form-control" ng-model="taskItem.Category" ng-disabled="taskItem.Status==2" required>
+								<option selected='selected' value='search-alias=aps'>All Departments</option>
+								<option value='search-alias=alexa-skills'>Alexa Skills</option>
+								<option value='search-alias=amazon-devices'>Amazon Devices</option>
+								<option value='search-alias=instant-video'>Amazon Video</option>
+								<option value='search-alias=warehouse-deals'>Amazon Warehouse Deals</option>
+								<option value='search-alias=appliances'>Appliances</option>
+								<option value='search-alias=mobile-apps'>Apps & Games</option>
+								<option value='search-alias=arts-crafts'>Arts, Crafts & Sewing</option>
+								<option value='search-alias=automotive'>Automotive Parts & Accessories</option>
+								<option value='search-alias=baby-products'>Baby</option>
+								<option value='search-alias=beauty'>Beauty & Personal Care</option>
+								<option value='search-alias=stripbooks'>Books</option>
+								<option value='search-alias=popular'>CDs & Vinyl</option>
+								<option value='search-alias=mobile'>Cell Phones & Accessories</option>
+								<option value='search-alias=fashion'>Clothing, Shoes & Jewelry</option>
+								<option value='search-alias=fashion-womens'>&#160;&#160;&#160;Women</option>
+								<option value='search-alias=fashion-mens'>&#160;&#160;&#160;Men</option>
+								<option value='search-alias=fashion-girls'>&#160;&#160;&#160;Girls</option>
+								<option value='search-alias=fashion-boys'>&#160;&#160;&#160;Boys</option>
+								<option value='search-alias=fashion-baby'>&#160;&#160;&#160;Baby</option>
+								<option value='search-alias=collectibles'>Collectibles & Fine Art</option>
+								<option value='search-alias=computers'>Computers</option>
+								<option value='search-alias=courses'>Courses</option>
+								<option value='search-alias=financial'>Credit and Payment Cards</option>
+								<option value='search-alias=digital-music'>Digital Music</option>
+								<option value='search-alias=electronics'>Electronics</option>
+								<option value='search-alias=lawngarden'>Garden & Outdoor</option>
+								<option value='search-alias=gift-cards'>Gift Cards</option>
+								<option value='search-alias=grocery'>Grocery & Gourmet Food</option>
+								<option value='search-alias=handmade'>Handmade</option>
+								<option value='search-alias=hpc'>Health, Household & Baby Care</option>
+								<option value='search-alias=local-services'>Home & Business Services</option>
+								<option value='search-alias=garden'>Home & Kitchen</option>
+								<option value='search-alias=industrial'>Industrial & Scientific</option>
+								<option value='search-alias=digital-text'>Kindle Store</option>
+								<option value='search-alias=fashion-luggage'>Luggage & Travel Gear</option>
+								<option value='search-alias=luxury-beauty'>Luxury Beauty</option>
+								<option value='search-alias=magazines'>Magazine Subscriptions</option>
+								<option value='search-alias=movies-tv'>Movies & TV</option>
+								<option value='search-alias=mi'>Musical Instruments</option>
+								<option value='search-alias=office-products'>Office Products</option>
+								<option value='search-alias=pets'>Pet Supplies</option>
+								<option value='search-alias=prime-exclusive'>Prime Exclusive Savings</option>
+								<option value='search-alias=pantry'>Prime Pantry</option>
+								<option value='search-alias=software'>Software</option>
+								<option value='search-alias=sporting'>Sports & Outdoors</option>
+								<option value='search-alias=tools'>Tools & Home Improvement</option>
+								<option value='search-alias=toys-and-games'>Toys & Games</option>
+								<option value='search-alias=vehicles'>Vehicles</option>
+								<option value='search-alias=videogames'>Video Games</option>
+							</select>
+						</div>
+					</figcaption>
+					<figcaption class="form-group">
+						<label class="col-sm-4 control-label"><span class="text-danger">*</span>SellerID</label>
+						<div class="col-sm-8"><input ng-model="taskItem.SellerId" class="form-control" ng-disabled="taskItem.Status==2" required></div>
+					</figcaption>
+					<figcaption class="form-group">
+						<label class="col-sm-4 control-label"><span class="text-danger">*</span>执行次数</label>
+						<div class="col-sm-8"><input ng-model="taskItem.ExecuteNum" class="form-control" type="number" ng-disabled="taskItem.Status==2" required></div>
+					</figcaption>
+					<figcaption class="form-group" ng-if="taskItem.Id">
+						<label class="col-sm-4 control-label">任务状态</label>
+						<div class="col-sm-8">
+							<select ng-model="taskItem.Status" class="form-control" disabled>
+								<option value="0">未开始</option>
+								<option value="1">进行中</option>
+								<option value="2">已完成</option>
+							</select>
+						</div>
+					</figcaption>
+				</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{ taskItem.Status==2?'返 回':'取 消' }}</button>
+					<button type="button" class="btn btn-primary" ng-click="saveTask()" ng-if="taskItem.Status!=2">保 存</button>
+				</div>
+			</div>
+		</div>
+</aside>

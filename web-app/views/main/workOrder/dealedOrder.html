@@ -1,0 +1,396 @@
+<style>
+	.table tbody tr td {
+		vertical-align: middle;
+		white-space: nowrap;
+	}
+	
+	.mydropdown {
+		position: relative;
+	}
+	
+	.mydropdown-nav {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	
+	.mydropdown-nav span {
+		display: inline-block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+	
+	.mydropdown-content {
+		display: none;
+		position: absolute;
+		z-index: 5;
+		line-height: 20px;
+		right: 100%;
+		bottom: 0;
+		width: 470px;
+		max-width: 470px;
+		min-height: 80px;
+		max-height: 250px;
+		margin-bottom: 0;
+		padding: 8px 10px 10px 10px;
+		white-space: normal;
+		overflow-y: auto;
+		background-color: #fff;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+		border-radius: 4px;
+	}
+	
+	.mydropdown-content li {
+		padding-top: 10px;
+		border-top: 1px solid #eaeefb;
+	}
+	
+	.mydropdown-content-title {
+		text-align: center;
+		font-size: 16px;
+		font-weight: bold;
+		height: 30px;
+		line-height: 30px;
+	}
+	
+	.mydropdown-content-title span {
+		display: inline-block;
+		position: relative;
+		left: 41%;
+		width: 30px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		border-radius: 3px;
+	}
+	
+	.mydropdown-content-title span:hover {
+		background-color: #F2FBFF;
+	}
+	
+	.mydropdown-content li:first-child {
+		margin-top: 0;
+		padding-top: 2px;
+		border-top: none;
+	}
+	
+	.mydropdown:hover .mydropdown-content {
+		display: block
+	}
+	
+	.addRemarkList {
+		white-space: normal !important;
+	}
+	
+	.saveOkIcon {
+		width: 30px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		margin-left: 363px;
+	}
+	
+	.saveRemoveIcon {
+		width: 30px;
+		height: 20px;
+		line-height: 20px;
+		text-align: center;
+		margin-left: 5px;
+	}
+	
+	.saveOkIcon:hover {
+		background-color: #1ab394;
+		border-radius: 3px;
+	}
+	
+	.saveRemoveIcon:hover {
+		background-color: #ed5565;
+		border-radius: 3px;
+	}
+	
+	.lin-dropdown {
+		position: relative;
+		width: 100px;
+	}
+	
+	.lin-dropdown:hover .lin-dropdown-content {
+		display: block;
+	}
+	
+	.lin-dropdown .lin-dropdown-nav {
+		width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		cursor: pointer;
+	}
+	
+	.lin-dropdown .lin-dropdown-content {
+		display: none;
+		position: absolute;
+		right: 100%;
+		bottom: 0;
+		width: 300px;
+		background-color: #fff;
+		border: 1px #fff solid;
+		box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+		border-radius: 4px;
+		white-space: normal;
+		cursor: default;
+		z-index: 10;
+		cursor: pointer;
+	}
+	
+	.lin-dropdown .lin-dropdown-content:after {
+		position: absolute;
+		bottom: 18px;
+		right: -11px;
+		width: 0;
+		height: 0;
+		content: '';
+		border: 6px solid transparent;
+		border-left-color: #fff;
+	}
+	
+	.slick-dots {
+		bottom: -34px;
+	}
+</style>
+<!--表格-->
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="ibox">
+		<slick ng-if="noticeList.length" autoplay="true" dots="true" autoplay-speed="5000">
+			<div ng-repeat="item in noticeList">
+				<div class="ibox-content">
+					<h3>{{item.title}}</h3>
+					<p style="max-height:121px;overflow:auto;white-space:pre-line;">{{item.content}}</p>
+				</div>
+			</div>
+		</slick>
+	</div>
+	<div class="ibox float-e-margins">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="ibox-title">
+					<h5> 处理中工单 </h5>
+					<div ibox-tools></div>
+				</div>
+				<div class="ibox-content">
+					<!--选择-->
+					<div>
+						<form role="form" class="form-inline" name="formOption" role="form" novalidate>
+							<div class="row">
+								<div class="col-lg-2">
+									<div class="form-group">
+										<input type="text" name="creator" ng-model="optionData.creator" class="form-control" placeholder="创建人">
+									</div>
+								</div>
+								<div class="col-lg-2">
+									<div class="form-group">
+										<input type="text" name="handler" ng-model="optionData.handler" class="form-control" placeholder="当前处理人">
+									</div>
+								</div>
+								<div class="col-lg-2">
+									<div class="form-group">
+										<input type="text" name="treated" ng-model="optionData.treated" class="form-control" placeholder="参与处理人">
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="form-group">
+										<label class="form-label">开始日期</label>
+
+										<div class="input-group date">
+											<input type="datetime" class="form-control" date-time ng-model="optionData.startDate" view="date" auto-close="true" min-view="date" format="YYYY-MM-DD">
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+										</div>
+
+									</div>
+								</div>
+								<div class="col-lg-3">
+									<div class="form-group">
+										<label class="form-label">结束日期&nbsp;</label>
+
+										<div class="input-group date">
+											<input type="datetime" class="form-control" date-time ng-model="optionData.endDate" view="date" auto-close="true" min-view="date" format="YYYY-MM-DD">
+											<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row m-t">
+								<div class="col-lg-2">
+									<div class="form-group">
+										<input class="form-control" ng-model="optionData.asin" placeholder="ASIN">
+									</div>
+								</div>
+								<div class="col-lg-2">
+									<div class="form-group">
+										<input class="form-control" ng-model="optionData.orderId" placeholder="编号">
+									</div>
+								</div>
+								<div class="col-lg-2">
+									<div class="form-group">
+										<select class="form-control" name="handle" ng-options="item.id as item.name for item in handleList" ng-model="optionData.handle" style="width: 177px;">
+											<option value="">处理状态</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group m-r">
+										<label class="form-label">问题类型</label>
+										<select chosen class="form-control chosen-select" ng-model="optionData.type" ng-options="item['type'] as item.name for item in problemTypesList" style="width: 177px;">
+											<option value>问题类型</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="row m-t">
+								<div class="col-lg-6">
+									<button class="btn btn-primary btn-md m-r-lg btn-w-m" ng-click="checkFn()">查询</button>
+									<button class="btn btn-white btn-md btn-w-m" ng-click="resetFn()">重置</button>
+								</div>
+							</div>
+						</form>
+					</div>
+					<!--表格-->
+					<div class="m-t-lg">
+						<table class="footable table table-stripped toggle-arrow-tiny" data-page-size="100">
+							<thead>
+								<tr>
+									<th data-toggle="true">序号</th>
+									<th>工单编号</th>
+									<th>ASIN</th>
+									<th>产品中文名</th>
+									<th>店铺</th>
+									<th>处理状态</th>
+									<th>类型</th>
+									<th>创建人</th>
+									<th>当前处理人</th>
+									<th>主管</th>
+									<th>类目组</th>
+									<th>FBA库存</th>
+									<th>创建时间</th>
+									<th>ASIN状态</th>
+									<th>备注</th>
+									<th>操作</th>
+									<th data-hide="all">工单内容</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="tableItem in tableList">
+									<td>
+										{{$index+1}}
+									</td>
+									<td>
+										{{tableItem.orderID || '-'}}
+									</td>
+									<td>
+										{{ tableItem.asin || '-'}}
+									</td>
+									<td class="lin-dropdown">
+										<div class="lin-dropdown-nav">{{ tableItem.product || '-' }}</div>
+										<div ng-if="tableItem.product" class="lin-dropdown-content">
+											<div style="padding:12px;max-height:288px;overflow-x:auto;">{{ tableItem.product }}</div>
+										</div>
+									</td>
+									<td>
+										{{ tableItem.shop_name || '-'}}
+									</td>
+									<td title="{{tableItem.handleTime | date:'yyyy-MM-dd HH:mm:ss'}}">
+										<span ng-if="tableItem.state==2">已处理</span>
+										<span ng-if="tableItem.state!=2">{{tableItem.handle?'处理中':'待处理'}}</span>
+									</td>
+									<td>
+										{{ typeSelect(tableItem.type) }}
+									</td>
+									<td>
+										{{tableItem.creator || '-'}}
+									</td>
+									<td>
+										{{tableItem.handler || '-'}}
+									</td>
+									<td>
+										{{tableItem.leader || '-'}}
+									</td>
+									<td>
+										{{tableItem.team_name || '-'}}
+									</td>
+									<td>
+										{{value.fba_stock || '-'}}
+									</td>
+									<td>
+										{{tableItem.createdAt |date:'yyyy-MM-dd HH:mm:ss' || '-'}}
+									</td>
+
+									<td>
+										{{tableItem.status || '-'}}
+									</td>
+									<td class="mydropdown" style="max-width: 100px;">
+										<div class="mydropdown-nav">
+											<span>{{tableItem.remarks[0].content || '-'}}</span>
+										</div>
+										<ol class="mydropdown-content" ng-show="true" style="list-style: none;">
+											<li class="mydropdown-content-title">历史备注<span class="fa fa-edit" title="添加备注" data-toggle="modal" data-target="#editRemark" ng-click="operateRemark(tableItem, $index)"></span></li>
+											<!--<li class="mydropdown-content-title">历史备注<span class="fa fa-edit" title="添加备注" ng-click="operateRemark($index)"></span></li>
+											<li class="addRemarkList" style="display: none;">
+												<form name="addRemarkForm">
+													<div>
+														<textarea class="form-control" placeholder="请在此添加备注" name="remarkText" ng-model="remarkText.remark" rows="3" cols="10"></textarea>
+													</div>
+													<div>
+														<span class="saveOkIcon glyphicon glyphicon-ok" ng-click="saveRemark(tableItem, $index)"></span>
+														<span class="saveRemoveIcon glyphicon glyphicon-remove" ng-click="operateRemark($index)"></span>
+													</div>
+												</form>
+											</li>-->
+											<li ng-repeat="remark in tableItem.remarks">
+												<span><i class="fa fa-user-circle" style="display: inline-block;margin-right: 10px;"></i> {{remark.writer.name}} </span>
+												<span style="margin-left: 30%;"><i class="fa fa-clock-o" style="display: inline-block;margin-right: 13px;"></i> {{remark.createdAt | date: 'yyyy-MM-dd HH:mm:ss'}} </span><br>
+												<div style="display: inline;word-wrap: break-word;"><i class="fa fa-stack-exchange" style="display: inline-block;margin-right: 15px;"></i> {{remark.content || '-'}} </div>
+											</li>
+
+										</ol>
+									</td>
+									<td>
+										<button class="btn btn-primary btn-outline btn-sm" type="button" ui-sref="main.workOrder.toDeal({id:tableItem.ID,fromPage:'main.workOrder.dealedOrder'})">查看记录
+                            </button>
+									</td>
+									<td ng-bind-html="tableItem.content | trustHtml:tableItem.type"></td>
+								</tr>
+							</tbody>
+						</table>
+						<!--分页-->
+						<div class="text-right">
+							<select class="form-control input-sm" ng-change="handlePagination(optionData.itemsPerPage)" ng-model="optionData.itemsPerPage" ng-options="item+' / 页' for item in [10,25,50,100]" style="float:left;width:auto;height: auto;"></select>
+							<ul style="margin: 0;" uib-pagination items-per-page="optionData.itemsPerPage" total-items="totalItems" ng-model="optionData.currentPage" max-size="5" class="pagination-sm" boundary-links="true" rotate="false" ng-change="pageChanged()"></ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--弹出修改框-->
+	<div class="modal inmodal fade" id="editRemark" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width: 35%;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">添加备注</h4>
+				</div>
+				<div id="orderDetails" class="modal-body">
+					<div>
+						<span class="col-sm-4" style="padding: 0;">工单编号：{{ itemData.orderID }}</span>
+						<span class="col-sm-4">ASIN：{{ itemData.asin }}</span>
+						<span class="col-sm-4">店铺：{{ itemData.shop_name }}</span>
+					</div>
+					<div style="margin-top: 20px;padding-top: 10px;">
+						<textarea class="form-control" placeholder="请在此添加备注" name="remarkText" ng-model="remarkText.remark" rows="3" cols="10"></textarea>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal" ng-click="saveRemark()">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

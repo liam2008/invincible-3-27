@@ -1,0 +1,10 @@
+[
+    "libs/moment.js",
+    "libs/pako.js",
+    "libs/sprintf.js",
+    "libs/uuid.js",
+    "base/boot.js",
+    "consts/code.js",
+    "consts/maps.js",
+    "utils/utils.js"
+]

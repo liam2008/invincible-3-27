@@ -1,0 +1,31 @@
+{
+    "debug": {
+        "host"              : "192.168.2.22",
+        "db"                : "db_smart_invincible_debug",
+        "port"              : 27017
+    },
+
+    "development": {
+        "host"              : "192.168.2.22",
+        "db"                : "db_smart_invincible_development",
+        "port"              : 27017
+    },
+
+    "production": {
+        "host"              : "192.168.2.22",
+        "db"                : "db_smart_invincible",
+        "port"              : 27017
+    },
+
+    "hangzhou": {
+        "host"              : "127.0.0.1",
+        "db"                : "db_smart_invincible_hangzhou",
+        "port"              : 27017
+    },
+
+    "shenzhen": {
+        "host"              : "127.0.0.1",
+        "db"                : "db_smart_invincible_shenzhen",
+        "port"              : 27017
+    }
+}
